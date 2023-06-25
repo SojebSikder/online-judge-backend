@@ -1,12 +1,13 @@
-import shell from 'shelljs';
-import async from 'async';
-import fs from 'fs';
-import path from 'path';
+import * as shell from 'shelljs';
+import * as async from 'async';
+import * as fs from 'fs';
+import * as path from 'path';
 
-const PATH_INIT = path.join(
-  'D:/My Program/project/web/sojeb-oj',
-  '/submissions/',
-);
+// const PATH_INIT = path.join(
+//   // 'D:/My Program/project/web/sojeb-oj',
+//   appConfig().app.root_path,
+//   '/submissions/',
+// );
 
 const execute = function (
   language,
@@ -24,8 +25,9 @@ const execute = function (
   return commandText;
 };
 
-const test = function (problem, submission, op, callback) {
-  const PATH = path.join(PATH_INIT, submission._id.toString(), '/');
+const test = function (rootPath, problem, submission, op, callback) {
+  // const PATH = path.join(PATH_INIT, submission._id.toString(), '/');
+  const PATH = path.join(rootPath, submission._id.toString(), '/');
   const code = submission.code;
   const filename = PATH + 'solution.' + submission.language;
   const testfileName = PATH + 'testcase.txt';
@@ -76,7 +78,7 @@ const test = function (problem, submission, op, callback) {
             },
             function (err, next) {
               if (err) next(null, err);
-              shell.cd(PATH_INIT);
+              shell.cd(rootPath);
               shell.exec(
                 execute(
                   submission.language,
@@ -162,6 +164,32 @@ const test = function (problem, submission, op, callback) {
   ]);
 };
 
-export const addSubmission = ({ problem, submission, op, callback }) => {
-  test(problem, submission, op, callback);
+const addSubmission = ({ rootPath, problem, submission, op, callback }) => {
+  test(rootPath, problem, submission, op, callback);
 };
+
+// option
+type Option = {
+  rootPath?: string;
+};
+
+/**
+ * @class CodeSandbox
+ * @description CodeSandbox class
+ * @param {Object} config
+ */
+export class CodeSandbox {
+  private _config: Option;
+  constructor(config: Option) {
+    this._config = config;
+  }
+  addSubmission({ problem, submission, op, callback }) {
+    addSubmission({
+      rootPath: this._config.rootPath,
+      problem,
+      submission,
+      op,
+      callback,
+    });
+  }
+}

@@ -2,8 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { CreateJudgeDto } from './dto/create-judge.dto';
 import { UpdateJudgeDto } from './dto/update-judge.dto';
 
-import crypto from 'crypto';
-import { addSubmission } from 'src/common/lib/CodeSandbox/CodeSandbox';
+import * as crypto from 'crypto';
+import { CodeSandbox } from 'src/common/lib/CodeSandbox/CodeSandbox';
+import appConfig from 'src/config/app.config';
 
 function random(size) {
   //returns a crypto-safe random
@@ -42,7 +43,11 @@ export class JudgeService {
     };
     const op = 'runcode';
 
-    addSubmission({
+    const codeSandbox = new CodeSandbox({
+      rootPath: appConfig().app.root_path + '/submissions/',
+    });
+
+    codeSandbox.addSubmission({
       problem: problem,
       submission: submission,
       op: op,
