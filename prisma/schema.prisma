@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// User table
+model User {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  deleted_at DateTime?
+  status     Int?      @default(1)
+
+  // available values:
+  // online, busy, offline
+  availability String?
+
+  email    String? @unique
+  username String? @unique
+  fname    String? @db.VarChar(255)
+  lname    String? @db.VarChar(255)
+  password String? @db.VarChar(255)
+  domain   String? @unique
+  avatar   String?
+  Ucode    Ucode[]
+
+  @@map("users")
+}
+
+// This Ucode table for storing temporary token/code for use of
+// email verification, forgot password etc
+model Ucode {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  status     Int?     @default(1)
+
+  user_id Int?
+  user    User? @relation(fields: [user_id], references: [id])
+
+  token      String    @db.Text
+  email      String
+  expired_at DateTime?
+
+  @@map("ucodes")
+}
