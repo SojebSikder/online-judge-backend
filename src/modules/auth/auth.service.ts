@@ -13,24 +13,57 @@ export class AuthService extends PrismaClient {
     super();
   }
 
-  async validateUser(email: string, pass: string): Promise<any> {
+  async validateUser(
+    email: string,
+    pass: string,
+    isAdmin: boolean,
+  ): Promise<any> {
     const _password = pass;
-    const user = await this.prisma.user.findFirst({
-      where: {
-        email: email,
-      },
-    });
 
-    if (user) {
-      const _isValidPassword = await bcrypt.compare(_password, user.password);
-      if (_isValidPassword) {
-        const { password, ...result } = user;
-        return result;
+    if (isAdmin) {
+      const user = await this.prisma.user.findFirst({
+        where: {
+          email: email,
+        },
+      });
+
+      if (user) {
+        if (!user.admin) {
+          throw new UnauthorizedException('Only admin can access here');
+        } else {
+          const _isValidPassword = await bcrypt.compare(
+            _password,
+            user.password,
+          );
+          if (_isValidPassword) {
+            const { password, ...result } = user;
+            return result;
+          } else {
+            throw new UnauthorizedException('Password not matched');
+          }
+        }
       } else {
-        throw new UnauthorizedException('Password not matched');
+        throw new UnauthorizedException('User not found');
+      }
+    } else {
+      const user = await this.prisma.user.findFirst({
+        where: {
+          email: email,
+        },
+      });
+
+      if (user) {
+        const _isValidPassword = await bcrypt.compare(_password, user.password);
+        if (_isValidPassword) {
+          const { password, ...result } = user;
+          return result;
+        } else {
+          throw new UnauthorizedException('Password not matched');
+        }
+      } else {
+        throw new UnauthorizedException('User not found');
       }
     }
-    return null;
   }
 
   async login({ email, userId }) {

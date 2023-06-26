@@ -10,6 +10,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthModule } from './modules/auth/auth.module';
 import { PrismaModule } from './providers/prisma/prisma.module';
+import { ThrottlerBehindProxyGuard } from './common/guard/throttler-behind-proxy.guard';
 
 @Module({
   imports: [
@@ -34,10 +35,14 @@ import { PrismaModule } from './providers/prisma/prisma.module';
   ],
   controllers: [AppController],
   providers: [
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: ThrottlerGuard,
-    // },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerBehindProxyGuard,
+    },
     AppService,
   ],
 })
