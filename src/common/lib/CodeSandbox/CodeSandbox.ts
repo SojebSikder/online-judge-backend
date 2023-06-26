@@ -170,7 +170,9 @@ const test = function (rootPath, problem, submission, op): Promise<any[]> {
           });
         },
       ]);
-    } catch (error) {}
+    } catch (error) {
+      reject(error);
+    }
   });
 };
 
