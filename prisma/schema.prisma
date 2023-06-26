@@ -99,6 +99,7 @@ model Problem {
 
   statement   String?
   explanation String?
+  constraint  String?
   time        Decimal?
   memory      Int?
 
