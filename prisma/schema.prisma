@@ -22,16 +22,19 @@ model User {
   // online, busy, offline
   availability String?
 
-  email      String?      @unique
-  username   String?      @unique
-  fname      String?      @db.VarChar(255)
-  lname      String?      @db.VarChar(255)
-  password   String?      @db.VarChar(255)
-  domain     String?      @unique
-  avatar     String?
+  email    String? @unique
+  username String? @unique
+  fname    String? @db.VarChar(255)
+  lname    String? @db.VarChar(255)
+  password String? @db.VarChar(255)
+  avatar   String?
+
+  admin Boolean? @default(false)
+
   Ucode      Ucode[]
   Problem    Problem[]
   Submission Submission[]
+  RoleUser   RoleUser[]
 
   @@map("users")
 }
@@ -54,7 +57,93 @@ model Ucode {
   @@map("ucodes")
 }
 
-// This table for storing tags
+// Store list of Roles
+model Role {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  deleted_at DateTime?
+  status     Int?      @default(1)
+
+  title String?
+  name  String?
+
+  permission_roles PermissionRole[]
+  role_users       RoleUser[]
+  permissions      Permission[]
+
+  @@map("roles")
+}
+
+// Store List of permissions
+model Permission {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  deleted_at DateTime?
+  status     Int?      @default(1)
+
+  title            String?
+  action           String?
+  subject          String?
+  conditions       String?          @db.Text
+  fields           String?          @db.Text
+  permission_roles PermissionRole[]
+  roles            Role[]
+
+  @@map("permissions")
+}
+
+// permission and role relationship
+model PermissionRole {
+  // id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  permission_id Int
+  permission    Permission? @relation(fields: [permission_id], references: [id], onDelete: Cascade)
+
+  role_id Int
+  role    Role? @relation(fields: [role_id], references: [id], onDelete: Cascade)
+
+  @@id([permission_id, role_id])
+  @@map("permission_roles")
+}
+
+// role and user relationship
+model RoleUser {
+  // id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  role_id Int
+  role    Role? @relation(fields: [role_id], references: [id], onDelete: Cascade)
+
+  user_id Int
+  user    User? @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@id([role_id, user_id])
+  @@map("role_users")
+}
+
+// just for example
+// model Note {
+//   id         Int       @id @default(autoincrement())
+//   created_at DateTime  @default(now())
+//   updated_at DateTime  @default(now())
+//   deleted_at DateTime?
+//   status     Int?      @default(1)
+
+//   title String?
+//   body  String? @db.Text
+
+//   tenant_id Int?
+//   tenant    Organization? @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+
+//   @@map("notes")
+// }
+
+// Store tags (e.x. stack, queue, graph, etc)
 model Tag {
   id         Int       @id @default(autoincrement())
   created_at DateTime  @default(now())
@@ -83,7 +172,7 @@ model ProblemTag {
   @@map("problem_tags")
 }
 
-// This table for storing problem
+// Store problem
 model Problem {
   id         Int       @id @default(autoincrement())
   created_at DateTime  @default(now())
@@ -113,7 +202,7 @@ model Problem {
   @@map("problems")
 }
 
-// This table for storing submission
+// Store submission
 model Submission {
   id         Int       @id @default(autoincrement())
   created_at DateTime  @default(now())
