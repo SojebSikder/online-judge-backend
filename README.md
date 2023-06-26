@@ -9,6 +9,7 @@ pnpm install
 ```
 
 Go to docker directory, run following command:
+
 ```bash
 docker build -t 'online-judge' .
 ```
@@ -24,6 +25,9 @@ pnpm run start:dev
 
 # production mode
 pnpm run start:prod
+
+# with swc compiler (faster)
+nest start -b swc -w
 ```
 
 ## Test

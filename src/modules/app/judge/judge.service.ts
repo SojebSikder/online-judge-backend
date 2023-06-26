@@ -3,8 +3,8 @@ import { CreateJudgeDto } from './dto/create-judge.dto';
 import { UpdateJudgeDto } from './dto/update-judge.dto';
 
 import * as crypto from 'crypto';
-import { CodeSandbox } from 'src/common/lib/CodeSandbox/CodeSandbox';
-import appConfig from 'src/config/app.config';
+import { CodeSandbox } from '../../../common/lib/CodeSandbox/CodeSandbox';
+import appConfig from '../../../config/app.config';
 
 function random(size) {
   //returns a crypto-safe random
