@@ -13,10 +13,11 @@ import { CreateJudgeDto } from './dto/create-judge.dto';
 import { UpdateJudgeDto } from './dto/update-judge.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { AbilitiesGuard } from 'src/providers/ability/abilities.guard';
 
 @ApiBearerAuth()
 @ApiTags('judge')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, AbilitiesGuard)
 @Controller('judge')
 export class JudgeController {
   constructor(private readonly judgeService: JudgeService) {}

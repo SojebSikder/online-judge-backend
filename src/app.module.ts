@@ -11,6 +11,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthModule } from './modules/auth/auth.module';
 import { PrismaModule } from './providers/prisma/prisma.module';
 import { ThrottlerBehindProxyGuard } from './common/guard/throttler-behind-proxy.guard';
+import { ProblemModule } from './modules/app/problem/problem.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { ThrottlerBehindProxyGuard } from './common/guard/throttler-behind-proxy
     PrismaModule,
     AuthModule,
     JudgeModule,
+    ProblemModule,
   ],
   controllers: [AppController],
   providers: [
