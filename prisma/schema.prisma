@@ -22,14 +22,16 @@ model User {
   // online, busy, offline
   availability String?
 
-  email    String? @unique
-  username String? @unique
-  fname    String? @db.VarChar(255)
-  lname    String? @db.VarChar(255)
-  password String? @db.VarChar(255)
-  domain   String? @unique
-  avatar   String?
-  Ucode    Ucode[]
+  email      String?      @unique
+  username   String?      @unique
+  fname      String?      @db.VarChar(255)
+  lname      String?      @db.VarChar(255)
+  password   String?      @db.VarChar(255)
+  domain     String?      @unique
+  avatar     String?
+  Ucode      Ucode[]
+  Problem    Problem[]
+  Submission Submission[]
 
   @@map("users")
 }
@@ -50,4 +52,88 @@ model Ucode {
   expired_at DateTime?
 
   @@map("ucodes")
+}
+
+// This table for storing tags
+model Tag {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  deleted_at DateTime?
+  status     Int?      @default(1)
+
+  name       String?
+  slug       String?
+  ProblemTag ProblemTag[]
+
+  @@map("tags")
+}
+
+model ProblemTag {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  problem    Problem? @relation(fields: [problem_id], references: [id], onDelete: Cascade)
+  problem_id Int?
+
+  tag    Tag? @relation(fields: [tag_id], references: [id], onDelete: Cascade)
+  tag_id Int?
+
+  @@map("problem_tags")
+}
+
+// This table for storing problem
+model Problem {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  deleted_at DateTime?
+  status     Int?      @default(1)
+
+  name String?
+  slug String?
+
+  author_id Int?
+  author    User? @relation(fields: [author_id], references: [id], onDelete: SetNull)
+
+  statement   String?
+  explanation String?
+  time        Decimal?
+  memory      Int?
+
+  // format: [{input: "1 2", output: "3"}, {input: "2 3", output: "5"}}]
+  sample_test_cases Json?
+  system_test_cases Json?
+
+  Submission Submission[]
+  ProblemTag ProblemTag[]
+
+  @@map("problems")
+}
+
+// This table for storing submission
+model Submission {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  deleted_at DateTime?
+  status     Int?      @default(1)
+
+  code     String?
+  language String?
+  verdict  String?
+  time     Int?
+  memory   Int?
+
+  // format: [{input: "1 2", output: "3"}, {input: "2 3", output: "5"}}]
+  result Json?
+
+  problem_id Int?
+  problem    Problem? @relation(fields: [problem_id], references: [id], onDelete: SetNull)
+
+  user_id Int?
+  user    User? @relation(fields: [user_id], references: [id], onDelete: SetNull)
+
+  @@map("submissions")
 }
