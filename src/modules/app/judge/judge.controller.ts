@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { JudgeService } from './judge.service';
 import { CreateJudgeDto } from './dto/create-judge.dto';
@@ -23,16 +24,17 @@ export class JudgeController {
   constructor(private readonly judgeService: JudgeService) {}
 
   @ApiOperation({ summary: 'Code run' })
-  @Post()
+  @Post('run')
   async run(@Body() createJudgeDto: CreateJudgeDto) {
     const result = await this.judgeService.run(createJudgeDto);
     return result;
   }
 
   @ApiOperation({ summary: 'Code submission' })
-  @Post()
-  async create(@Body() createJudgeDto: CreateJudgeDto) {
-    const result = await this.judgeService.create(createJudgeDto);
+  @Post('submit')
+  async create(@Req() req: Request, @Body() createJudgeDto: CreateJudgeDto) {
+    const userId = req.user.userId;
+    const result = await this.judgeService.create(userId, createJudgeDto);
     return result;
   }
 
