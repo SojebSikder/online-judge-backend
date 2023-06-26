@@ -12,6 +12,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { PrismaModule } from './providers/prisma/prisma.module';
 import { ThrottlerBehindProxyGuard } from './common/guard/throttler-behind-proxy.guard';
 import { ProblemModule } from './modules/app/problem/problem.module';
+import { SubmissionModule } from './modules/app/submission/submission.module';
+import { AbilityModule } from './providers/ability/ability.module';
 
 @Module({
   imports: [
@@ -32,8 +34,10 @@ import { ProblemModule } from './modules/app/problem/problem.module';
     }),
     PrismaModule,
     AuthModule,
+    AbilityModule,
     JudgeModule,
     ProblemModule,
+    SubmissionModule,
   ],
   controllers: [AppController],
   providers: [

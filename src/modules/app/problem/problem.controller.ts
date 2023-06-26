@@ -13,11 +13,10 @@ import { ProblemService } from './problem.service';
 import { CreateProblemDto } from './dto/create-problem.dto';
 import { UpdateProblemDto } from './dto/update-problem.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
-import { AbilitiesGuard } from 'src/providers/ability/abilities.guard';
-import { CheckAbilities } from 'src/providers/ability/abilities.decorator';
-import { Action } from 'src/providers/ability/ability.factory';
-import { Request } from 'express';
+import { JwtAuthGuard } from '../../../modules/auth/guards/jwt-auth.guard';
+import { AbilitiesGuard } from '../../../providers/ability/abilities.guard';
+import { CheckAbilities } from '../../../providers/ability/abilities.decorator';
+import { Action } from '../../../providers/ability/ability.factory';
 
 @ApiBearerAuth()
 @ApiTags('problem')

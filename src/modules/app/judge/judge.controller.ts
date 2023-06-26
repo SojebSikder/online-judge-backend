@@ -13,7 +13,7 @@ import { CreateJudgeDto } from './dto/create-judge.dto';
 import { UpdateJudgeDto } from './dto/update-judge.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { AbilitiesGuard } from 'src/providers/ability/abilities.guard';
+import { AbilitiesGuard } from '../../../providers/ability/abilities.guard';
 
 @ApiBearerAuth()
 @ApiTags('judge')
@@ -22,10 +22,18 @@ import { AbilitiesGuard } from 'src/providers/ability/abilities.guard';
 export class JudgeController {
   constructor(private readonly judgeService: JudgeService) {}
 
+  @ApiOperation({ summary: 'Code run' })
+  @Post()
+  async run(@Body() createJudgeDto: CreateJudgeDto) {
+    const result = await this.judgeService.run(createJudgeDto);
+    return result;
+  }
+
   @ApiOperation({ summary: 'Code submission' })
   @Post()
   async create(@Body() createJudgeDto: CreateJudgeDto) {
-    return await this.judgeService.create(createJudgeDto);
+    const result = await this.judgeService.create(createJudgeDto);
+    return result;
   }
 
   @Get()
