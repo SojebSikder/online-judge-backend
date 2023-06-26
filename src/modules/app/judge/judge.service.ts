@@ -15,6 +15,7 @@ function random(size) {
 export class JudgeService {
   create(createJudgeDto: CreateJudgeDto) {
     const code = createJudgeDto.code;
+    const language = createJudgeDto.language;
 
     const problem = {
       time: 1,
@@ -39,7 +40,7 @@ export class JudgeService {
     const submission = {
       _id: random(10),
       code: code,
-      language: 'cpp',
+      language: language, // cpp, py
     };
     const op = 'runcode';
 
