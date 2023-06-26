@@ -41,6 +41,7 @@ export class JudgeService {
       _id: random(10),
       code: code,
       language: language, // cpp, py
+      verdict: '',
     };
     const op = 'runcode';
 
@@ -48,22 +49,69 @@ export class JudgeService {
       rootPath: appConfig().app.root_path + '/submissions/',
     });
 
-    codeSandbox.addSubmission({
+    const data = codeSandbox.addSubmission({
       problem: problem,
       submission: submission,
       op: op,
-      callback: (error, result) => {
-        if (error) {
-          console.log(error);
-          return { error: error };
-        } else {
-          console.log(result);
-          return {
-            data: result,
-          };
+      callback: (err, result) => {
+        // if (err) {
+        //   console.log('error', err);
+        //   return { error: err };
+        // } else {
+        //   console.log('result', result);
+        //   return {
+        //     data: result,
+        //   };
+        // }
+
+        if (err) {
+          console.log(err);
+          return { message: 'Something Went Wrong! Try Again!!!' };
         }
+
+        const finalResult = [];
+        const verdicts = [],
+          testcases = [];
+
+        console.log(result);
+
+        result.forEach((curResult) => {
+          const newResult = {},
+            curTestcase = {
+              time: curResult.time,
+              memory: curResult.memory,
+            };
+
+          for (const key in curResult) {
+            if (curResult[key] !== false) {
+              newResult[key] = curResult[key];
+            }
+            if (curResult[key] === true) {
+              newResult['verdict'] = key;
+              curTestcase['verdict'] = key;
+              verdicts.push(key);
+            }
+          }
+          testcases.push(curTestcase);
+          finalResult.push(newResult);
+        });
+
+        // submission.result = testcases;
+
+        if (verdicts.includes('CE')) submission.verdict = 'CE';
+        else if (verdicts.includes('MLE')) submission.verdict = 'MLE';
+        else if (verdicts.includes('TLE')) submission.verdict = 'TLE';
+        else if (verdicts.includes('RTE')) submission.verdict = 'RTE';
+        else if (verdicts.includes('WA')) submission.verdict = 'WA';
+        else if (verdicts.includes('AC')) submission.verdict = 'AC';
+
+        console.log(submission.verdict, finalResult);
+
+        return { verdict: submission.verdict, result: finalResult };
       },
     });
+
+    return data;
   }
 
   findAll() {

@@ -156,7 +156,7 @@ const test = function (rootPath, problem, submission, op, callback) {
     },
     function (err) {
       if (err) callback(err, null);
-      fs.rmdir(PATH.slice(0, -1), { recursive: true }, (err) => {
+      fs.rm(PATH.slice(0, -1), { recursive: true }, (err) => {
         if (err) callback(err, null);
         else callback(null, result);
       });
