@@ -74,15 +74,16 @@ export class AuthService extends PrismaClient {
 
     // create a tenant admin (main subscriber)
     const user = await UserRepository.createUser({
+      fname: fname,
+      lname: lname,
       username: username,
       email: email,
       password: password,
-      role_id: 2, // tenant admin
     });
 
     return {
       statusCode: 401,
-      message: 'Account created successfully',
+      message: 'User created successfully',
     };
   }
 }

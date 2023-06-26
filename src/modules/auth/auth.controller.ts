@@ -39,6 +39,9 @@ export class AuthController {
         HttpStatus.UNAUTHORIZED,
       );
     }
+    if (!username) {
+      throw new HttpException('Username not provided', HttpStatus.UNAUTHORIZED);
+    }
     if (!email) {
       throw new HttpException('Email not provided', HttpStatus.UNAUTHORIZED);
     }
