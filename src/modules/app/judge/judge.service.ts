@@ -13,7 +13,7 @@ function random(size) {
 
 @Injectable()
 export class JudgeService {
-  create(createJudgeDto: CreateJudgeDto) {
+  async create(createJudgeDto: CreateJudgeDto) {
     const code = createJudgeDto.code;
     const language = createJudgeDto.language;
 
@@ -49,31 +49,19 @@ export class JudgeService {
       rootPath: appConfig().app.root_path + '/submissions/',
     });
 
-    const data = codeSandbox.addSubmission({
-      problem: problem,
-      submission: submission,
-      op: op,
-      callback: (err, result) => {
-        // if (err) {
-        //   console.log('error', err);
-        //   return { error: err };
-        // } else {
-        //   console.log('result', result);
-        //   return {
-        //     data: result,
-        //   };
-        // }
+    try {
+      const result = await codeSandbox.addSubmission({
+        problem: problem,
+        submission: submission,
+        op: op,
+      });
 
-        if (err) {
-          console.log(err);
-          return { message: 'Something Went Wrong! Try Again!!!' };
-        }
-
+      if (result) {
         const finalResult = [];
         const verdicts = [],
           testcases = [];
 
-        console.log(result);
+        // console.log(result);
 
         result.forEach((curResult) => {
           const newResult = {},
@@ -105,13 +93,16 @@ export class JudgeService {
         else if (verdicts.includes('WA')) submission.verdict = 'WA';
         else if (verdicts.includes('AC')) submission.verdict = 'AC';
 
-        console.log(submission.verdict, finalResult);
+        // console.log(submission.verdict, finalResult);
 
         return { verdict: submission.verdict, result: finalResult };
-      },
-    });
-
-    return data;
+      } else {
+        return { message: 'Something Went Wrong! Try Again!!!' };
+      }
+    } catch (error) {
+      // console.log(error);
+      return { message: 'Something Went Wrong! Try Again!!!' };
+    }
   }
 
   findAll() {

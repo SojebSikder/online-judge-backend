@@ -16,8 +16,8 @@ export class JudgeController {
   constructor(private readonly judgeService: JudgeService) {}
 
   @Post()
-  create(@Body() createJudgeDto: CreateJudgeDto) {
-    return this.judgeService.create(createJudgeDto);
+  async create(@Body() createJudgeDto: CreateJudgeDto) {
+    return await this.judgeService.create(createJudgeDto);
   }
 
   @Get()
