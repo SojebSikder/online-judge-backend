@@ -15,6 +15,7 @@ import { ProblemModule } from './modules/app/problem/problem.module';
 import { SubmissionModule } from './modules/app/submission/submission.module';
 import { AbilityModule } from './providers/ability/ability.module';
 import { UserModule } from './modules/app/user/user.module';
+import { MailModule } from './providers/mail/mail.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { UserModule } from './modules/app/user/user.module';
     PrismaModule,
     AuthModule,
     AbilityModule,
+    MailModule,
     UserModule,
     JudgeModule,
     ProblemModule,
