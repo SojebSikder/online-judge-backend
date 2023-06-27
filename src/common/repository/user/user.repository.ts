@@ -59,13 +59,11 @@ export class UserRepository {
    * @param param0
    * @returns
    */
-  static async createUser({ fname, lname, username, email, password }) {
+  static async createUser({ username, email, password }) {
     try {
       password = await bcrypt.hash(password, appConfig().security.salt);
       const user = await prisma.user.create({
         data: {
-          fname: fname,
-          lname: lname,
           username: username,
           email: email,
           password: password,

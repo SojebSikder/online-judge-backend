@@ -45,8 +45,6 @@ export class SeedCommand extends CommandRunner {
 
     // user id: 2
     await UserRepository.createUser({
-      fname: 'sojeb',
-      lname: 'sikder',
       username: 'sojebsikder',
       email: 'sojebsikder@gmail.com',
       password: '123',
