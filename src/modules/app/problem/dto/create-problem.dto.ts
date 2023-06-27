@@ -18,4 +18,9 @@ export class CreateProblemDto {
 
   @ApiProperty()
   memory?: number;
+
+  @ApiProperty()
+  sample_test_cases?: string;
+  @ApiProperty()
+  system_test_cases?: string;
 }

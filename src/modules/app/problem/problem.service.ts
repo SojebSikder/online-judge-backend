@@ -21,6 +21,9 @@ export class ProblemService extends PrismaClient {
       const time = createProblemDto.time;
       const memory = createProblemDto.memory;
 
+      // const sample_test_cases = createProblemDto.sample_test_cases;
+      // const system_test_cases = createProblemDto.system_test_cases;
+
       if (name) {
         Object.assign(data, {
           name: name,
@@ -43,14 +46,25 @@ export class ProblemService extends PrismaClient {
       }
       if (time) {
         Object.assign(data, {
-          time: time,
+          time: Number(time),
         });
       }
       if (memory) {
         Object.assign(data, {
-          memory: memory,
+          memory: Number(memory),
         });
       }
+
+      // if (sample_test_cases) {
+      //   Object.assign(data, {
+      //     sample_test_cases: sample_test_cases,
+      //   });
+      // }
+      // if (system_test_cases) {
+      //   Object.assign(data, {
+      //     system_test_cases: system_test_cases,
+      //   });
+      // }
 
       const result = await this.prisma.problem.create({
         data: {
@@ -65,7 +79,8 @@ export class ProblemService extends PrismaClient {
         return false;
       }
     } catch (error) {
-      return false;
+      // return false;
+      throw error;
     }
   }
 

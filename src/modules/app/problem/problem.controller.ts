@@ -28,9 +28,15 @@ export class ProblemController {
   @ApiOperation({ summary: 'Create problem' })
   // @CheckAbilities({ action: Action.Create, subject: 'Problem' })
   @Post()
-  create(@Req() req: Request, @Body() createProblemDto: CreateProblemDto) {
+  async create(
+    @Req() req: Request,
+    @Body() createProblemDto: CreateProblemDto,
+  ) {
     const user = req.user;
-    const result = this.problemService.create(user.userId, createProblemDto);
+    const result = await this.problemService.create(
+      user.userId,
+      createProblemDto,
+    );
 
     if (result) {
       return { message: 'Problem created successfully' };
