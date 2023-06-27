@@ -26,7 +26,7 @@ export class ProblemController {
   constructor(private readonly problemService: ProblemService) {}
 
   @ApiOperation({ summary: 'Create problem' })
-  @CheckAbilities({ action: Action.Create, subject: 'Problem' })
+  // @CheckAbilities({ action: Action.Create, subject: 'Problem' })
   @Post()
   create(@Req() req: Request, @Body() createProblemDto: CreateProblemDto) {
     const user = req.user;
@@ -40,7 +40,7 @@ export class ProblemController {
   }
 
   @ApiOperation({ summary: 'Read problems' })
-  @CheckAbilities({ action: Action.Read, subject: 'Problem' })
+  // @CheckAbilities({ action: Action.Read, subject: 'Problem' })
   @Get()
   async findAll(@Req() req: Request) {
     const user = req.user;
@@ -50,7 +50,7 @@ export class ProblemController {
   }
 
   @ApiOperation({ summary: 'Show problem' })
-  @CheckAbilities({ action: Action.Show, subject: 'Problem' })
+  // @CheckAbilities({ action: Action.Show, subject: 'Problem' })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.problemService.findOne(+id);

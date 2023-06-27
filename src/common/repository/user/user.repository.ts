@@ -15,6 +15,21 @@ export class UserRepository {
       where: {
         id: Number(userId),
       },
+      include: {
+        RoleUser: {
+          include: {
+            role: {
+              include: {
+                permission_roles: {
+                  include: {
+                    permission: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
     return user;
   }
