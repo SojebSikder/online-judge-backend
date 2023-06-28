@@ -51,15 +51,17 @@ export class ProblemController {
   async findAll(@Req() req: Request) {
     const user = req.user;
 
-    const data = await this.problemService.findAll();
-    return { data: data };
+    const result = await this.problemService.findAll();
+    return { data: result };
   }
 
   @ApiOperation({ summary: 'Show problem' })
   // @CheckAbilities({ action: Action.Show, subject: 'Problem' })
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.problemService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const result = await this.problemService.findOne(+id);
+
+    return { data: result };
   }
 
   @ApiOperation({ summary: 'Update problem' })
