@@ -126,7 +126,9 @@ export class JudgeService extends PrismaClient {
 
         // console.log(submission.verdict, finalResult);
 
-        return { verdict: submission.verdict, result: finalResult };
+        return {
+          data: { verdict: submission.verdict, result: finalResult },
+        };
       } else {
         return { message: 'Something Went Wrong! Try Again!!!' };
       }
