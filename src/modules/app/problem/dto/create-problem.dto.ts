@@ -20,7 +20,12 @@ export class CreateProblemDto {
   memory?: number;
 
   @ApiProperty()
-  sample_test_cases?: string;
+  sample_test_cases_input?: string;
   @ApiProperty()
-  system_test_cases?: string;
+  sample_test_cases_output?: string;
+
+  @ApiProperty()
+  system_test_cases_input?: string;
+  @ApiProperty()
+  system_test_cases_output?: string;
 }

@@ -4,6 +4,26 @@ import { CreateProblemDto } from './dto/create-problem.dto';
 import { UpdateProblemDto } from './dto/update-problem.dto';
 import { PrismaService } from '../../../providers/prisma/prisma.service';
 
+function getSampleTestCases(
+  sample_test_cases_input: string,
+  sample_test_cases_output: string,
+): any[] {
+  const sample_test_cases = [];
+
+  if (sample_test_cases_input && sample_test_cases_output) {
+    const split_input = sample_test_cases_input.split('\n');
+    const split_output = sample_test_cases_output.split('\n');
+
+    for (let i = 0; i < split_input.length; i++) {
+      sample_test_cases.push({
+        input: split_input[i],
+        output: split_output[i],
+      });
+    }
+  }
+
+  return sample_test_cases;
+}
 @Injectable()
 export class ProblemService extends PrismaClient {
   constructor(private prisma: PrismaService) {
@@ -20,6 +40,24 @@ export class ProblemService extends PrismaClient {
       const constraint = createProblemDto.constraint;
       const time = createProblemDto.time;
       const memory = createProblemDto.memory;
+
+      const sample_test_cases_input = createProblemDto.sample_test_cases_input;
+      const sample_test_cases_output =
+        createProblemDto.sample_test_cases_output;
+
+      const system_test_cases_input = createProblemDto.system_test_cases_input;
+      const system_test_cases_output =
+        createProblemDto.system_test_cases_output;
+
+      const sample_test_cases = getSampleTestCases(
+        sample_test_cases_input,
+        sample_test_cases_output,
+      );
+
+      const system_test_cases = getSampleTestCases(
+        system_test_cases_input,
+        system_test_cases_output,
+      );
 
       // const sample_test_cases = createProblemDto.sample_test_cases;
       // const system_test_cases = createProblemDto.system_test_cases;
@@ -55,16 +93,16 @@ export class ProblemService extends PrismaClient {
         });
       }
 
-      // if (sample_test_cases) {
-      //   Object.assign(data, {
-      //     sample_test_cases: sample_test_cases,
-      //   });
-      // }
-      // if (system_test_cases) {
-      //   Object.assign(data, {
-      //     system_test_cases: system_test_cases,
-      //   });
-      // }
+      if (sample_test_cases) {
+        Object.assign(data, {
+          sample_test_cases: sample_test_cases,
+        });
+      }
+      if (system_test_cases) {
+        Object.assign(data, {
+          system_test_cases: system_test_cases,
+        });
+      }
 
       const result = await this.prisma.problem.create({
         data: {
