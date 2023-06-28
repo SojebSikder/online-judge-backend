@@ -58,6 +58,12 @@ export class SeedCommand extends CommandRunner {
         role_id: 1,
       },
     });
+    await this.prisma.roleUser.create({
+      data: {
+        user_id: 2,
+        role_id: 1,
+      },
+    });
     // await this.prisma.roleUser.create({
     //   data: {
     //     user_id: 2,

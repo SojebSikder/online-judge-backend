@@ -116,14 +116,15 @@ CREATE TABLE `problems` (
     `name` VARCHAR(191) NULL,
     `slug` VARCHAR(191) NULL,
     `author_id` INTEGER NULL,
-    `statement` VARCHAR(191) NULL,
-    `explanation` VARCHAR(191) NULL,
-    `constraint` VARCHAR(191) NULL,
+    `statement` TEXT NULL,
+    `explanation` TEXT NULL,
+    `constraint` TEXT NULL,
     `time` DECIMAL(65, 30) NULL,
     `memory` INTEGER NULL,
     `sample_test_cases` JSON NULL,
     `system_test_cases` JSON NULL,
 
+    UNIQUE INDEX `problems_slug_key`(`slug`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -134,7 +135,7 @@ CREATE TABLE `submissions` (
     `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `deleted_at` DATETIME(3) NULL,
     `status` INTEGER NULL DEFAULT 1,
-    `code` VARCHAR(191) NULL,
+    `code` TEXT NULL,
     `language` VARCHAR(191) NULL,
     `verdict` VARCHAR(191) NULL,
     `time` INTEGER NULL,

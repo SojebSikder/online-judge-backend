@@ -65,8 +65,10 @@ export class JudgeService extends PrismaClient {
     const problem = {
       time: problemData.time || 1,
       memory: problemData.memory || 100,
-      sampleTestcases: problemData.sample_test_cases || [],
-      systemTestcases: problemData.system_test_cases || [],
+      // sampleTestcases: problemData.sample_test_cases || [],
+      // systemTestcases: problemData.system_test_cases || [],
+      sampleTestcases: [{ input: '', output: 'Hello world' }],
+      systemTestcases: [{ input: '', output: 'Hello world' }],
     };
     const submission = {
       _id: random(10),
