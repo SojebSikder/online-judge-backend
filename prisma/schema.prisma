@@ -22,6 +22,8 @@ model User {
   // online, busy, offline
   availability String?
 
+  score Int? @default(0) // total score of user calculated from score table
+
   email    String? @unique
   username String? @unique
   fname    String? @db.VarChar(255)
@@ -350,7 +352,7 @@ model Submission {
 
   // field for contest submission
   is_contest Int? @default(0) // 0: false, 1: true
-  penalty    Int? @default(0)
+  score      Int? @default(0) // score change
 
   problem_id Int?
   problem    Problem? @relation(fields: [problem_id], references: [id], onDelete: SetNull)
