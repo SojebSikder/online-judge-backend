@@ -29,7 +29,7 @@ model User {
   password String? @db.VarChar(255)
   avatar   String?
 
-  admin Boolean? @default(false)
+  is_admin Int? @default(0)
 
   Ucode               Ucode[]
   Problem             Problem[]
@@ -38,8 +38,33 @@ model User {
   ContestRegistration ContestRegistration[]
   ContestModerator    ContestModerator[]
   ProblemModerator    ProblemModerator[]
+  Profile             Profile[]
 
   @@map("users")
+}
+
+model Profile {
+  id Int @id @default(autoincrement())
+
+  user_id Int?
+  user    User? @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  date_of_birth DateTime?
+
+  country      String?
+  city         String?
+  organization String?
+
+  // address
+  recipient_name         String?
+  recipient_zip_code     String?
+  recipient_country      String?
+  recipient_state        String?
+  recipient_city         String?
+  recipient_address      String?
+  recipient_phone_number String?
+
+  @@map("profiles")
 }
 
 // This Ucode table for storing temporary token/code for use of
@@ -324,8 +349,8 @@ model Submission {
   result Json?
 
   // field for contest submission
-  is_contest Boolean? @default(false)
-  penalty    Int?     @default(0)
+  is_contest Int? @default(0) // 0: false, 1: true
+  penalty    Int? @default(0)
 
   problem_id Int?
   problem    Problem? @relation(fields: [problem_id], references: [id], onDelete: SetNull)
