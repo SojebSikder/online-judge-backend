@@ -29,11 +29,8 @@ export class ProblemController {
   // @CheckAbilities({ action: Action.Create, subject: 'Problem' })
   @Post()
   async create(@Req() req, @Body() createProblemDto: CreateProblemDto) {
-    const user = req.user;
-    const result = await this.problemService.create(
-      user.userId,
-      createProblemDto,
-    );
+    const userId = req.user.userId;
+    const result = await this.problemService.create(userId, createProblemDto);
 
     if (result) {
       return { message: 'Problem created successfully' };
@@ -46,7 +43,7 @@ export class ProblemController {
   // @CheckAbilities({ action: Action.Read, subject: 'Problem' })
   @Get()
   async findAll(@Req() req) {
-    const user = req.user;
+    const userId = req.user.userId;
 
     const result = await this.problemService.findAll();
     return { data: result };

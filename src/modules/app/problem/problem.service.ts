@@ -31,7 +31,7 @@ export class ProblemService extends PrismaClient {
     super();
   }
 
-  async create(userId, createProblemDto: CreateProblemDto) {
+  async create(userId: number, createProblemDto: CreateProblemDto) {
     try {
       const data = {};
 
