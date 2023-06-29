@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { CreateProblemDto } from './dto/create-problem.dto';
 import { UpdateProblemDto } from './dto/update-problem.dto';
 import { PrismaService } from '../../../providers/prisma/prisma.service';
+import { StringHelper } from 'src/common/helper/string.helper';
 
 function getSampleTestCases(
   sample_test_cases_input: string,
@@ -36,10 +37,14 @@ export class ProblemService extends PrismaClient {
 
       const name = createProblemDto.name;
       const statement = createProblemDto.statement;
-      const explanation = createProblemDto.explanation;
-      const constraint = createProblemDto.constraint;
-      const time = createProblemDto.time;
-      const memory = createProblemDto.memory;
+      const time_limit = createProblemDto.time_limit;
+      const memory_limit = createProblemDto.memory_limit;
+
+      const input_format = createProblemDto.input_format;
+      const output_format = createProblemDto.output_format;
+
+      const note = createProblemDto.note;
+      const difficulty = createProblemDto.difficulty;
 
       const sample_test_cases_input = createProblemDto.sample_test_cases_input;
       const sample_test_cases_output =
@@ -59,37 +64,61 @@ export class ProblemService extends PrismaClient {
         system_test_cases_output,
       );
 
-      // const sample_test_cases = createProblemDto.sample_test_cases;
-      // const system_test_cases = createProblemDto.system_test_cases;
+      // create slug
+      let slug = StringHelper.slugify(name);
+
+      const checkProblem = await this.prisma.problem.findFirst({
+        where: {
+          slug: slug,
+        },
+      });
+
+      if (checkProblem) {
+        slug = slug + '-' + StringHelper.randomString(5);
+      }
 
       if (name) {
         Object.assign(data, {
           name: name,
+          slug: slug,
         });
       }
+
       if (statement) {
         Object.assign(data, {
           statement: statement,
         });
       }
-      if (explanation) {
+
+      if (time_limit) {
         Object.assign(data, {
-          explanation: explanation,
+          time_limit: Number(time_limit),
         });
       }
-      if (constraint) {
+      if (memory_limit) {
         Object.assign(data, {
-          constraint: constraint,
+          memory_limit: Number(memory_limit),
         });
       }
-      if (time) {
+
+      if (input_format) {
         Object.assign(data, {
-          time: Number(time),
+          input_format: input_format,
         });
       }
-      if (memory) {
+      if (output_format) {
         Object.assign(data, {
-          memory: Number(memory),
+          output_format: output_format,
+        });
+      }
+      if (note) {
+        Object.assign(data, {
+          note: note,
+        });
+      }
+      if (difficulty) {
+        Object.assign(data, {
+          difficulty: difficulty,
         });
       }
 

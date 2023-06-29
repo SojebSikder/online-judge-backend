@@ -8,16 +8,22 @@ export class CreateProblemDto {
   statement: string;
 
   @ApiProperty()
-  explanation?: string;
+  time_limit?: number;
 
   @ApiProperty()
-  constraint?: string;
+  memory_limit?: number;
 
   @ApiProperty()
-  time?: number;
+  input_format?: string;
 
   @ApiProperty()
-  memory?: number;
+  output_format?: string;
+
+  @ApiProperty()
+  note?: string;
+
+  @ApiProperty()
+  difficulty?: string;
 
   @ApiProperty()
   sample_test_cases_input?: string;

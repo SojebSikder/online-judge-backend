@@ -9,8 +9,37 @@ export class StringHelper {
    * @param string
    * @returns
    */
-  public static cfirst(string) {
+  public static cfirst(string: string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  /**
+   * Slugify a string.
+   * @param string
+   * @returns
+   */
+  public static slugify(string: string) {
+    return string
+      .toLowerCase()
+      .replace(/[^\w ]+/g, '')
+      .replace(/ +/g, '-');
+  }
+
+  /**
+   * Generate a random string.
+   * @param length
+   * @returns
+   */
+  public static randomString(length: number): string {
+    let result = '';
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+
+    for (let i = 0; i < length; i++)
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+
+    return result;
   }
 
   /**
@@ -18,7 +47,7 @@ export class StringHelper {
    * @param string
    * @returns
    */
-  public static ucfirst(string) {
+  public static ucfirst(string: string) {
     return string.charAt(0).toLowerCase() + string.slice(1);
   }
 
