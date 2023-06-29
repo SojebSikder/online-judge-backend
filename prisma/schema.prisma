@@ -31,10 +31,13 @@ model User {
 
   admin Boolean? @default(false)
 
-  Ucode      Ucode[]
-  Problem    Problem[]
-  Submission Submission[]
-  RoleUser   RoleUser[]
+  Ucode               Ucode[]
+  Problem             Problem[]
+  Submission          Submission[]
+  RoleUser            RoleUser[]
+  ContestRegistration ContestRegistration[]
+  ContestModerator    ContestModerator[]
+  ProblemModerator    ProblemModerator[]
 
   @@map("users")
 }
@@ -172,8 +175,8 @@ model ProblemTag {
   @@map("problem_tags")
 }
 
-// Store problem
-model Problem {
+// Store contest
+model Contest {
   id         Int       @id @default(autoincrement())
   created_at DateTime  @default(now())
   updated_at DateTime  @default(now())
@@ -183,23 +186,122 @@ model Problem {
   name String?
   slug String? @unique
 
+  start_at DateTime?
+  end_at   DateTime?
+
+  ContestProblem      ContestProblem[]
+  ContestRegistration ContestRegistration[]
+  ContestModerator    ContestModerator[]
+
+  @@map("contests")
+}
+
+model ContestProblem {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  contest    Contest? @relation(fields: [contest_id], references: [id], onDelete: Cascade)
+  contest_id Int?
+
+  problem    Problem? @relation(fields: [problem_id], references: [id], onDelete: Cascade)
+  problem_id Int?
+
+  max_score Int? @default(0)
+
+  @@map("contest_problems")
+}
+
+// store contest moderator
+model ContestModerator {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  deleted_at DateTime?
+  status     Int?      @default(1)
+
+  user_id Int?
+  user    User? @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  contest_id Int?
+  contest    Contest? @relation(fields: [contest_id], references: [id], onDelete: Cascade)
+
+  @@map("contest_moderators")
+}
+
+// store contest registration
+model ContestRegistration {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  deleted_at DateTime?
+  status     Int?      @default(1)
+
+  user_id Int?
+  user    User? @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  contest_id Int?
+  contest    Contest? @relation(fields: [contest_id], references: [id], onDelete: Cascade)
+
+  @@map("contest_registrations")
+}
+
+// Store problem
+model Problem {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  deleted_at DateTime?
+  status     Int?      @default(1)
+
   author_id Int?
   author    User? @relation(fields: [author_id], references: [id], onDelete: SetNull)
 
-  statement   String?  @db.Text
-  explanation String?  @db.Text
-  constraint  String?  @db.Text
-  time        Decimal?
-  memory      Int?
+  name String?
+  slug String? @unique
+
+  // seconds
+  time_limit   Decimal?
+  // megabytes
+  memory_limit Int?
+
+  statement String? @db.Text
+
+  input_format  String? @db.Text
+  output_format String? @db.Text
+
+  note String? @db.Text
+
+  // difficulty Int?
+  difficulty String? // easy, medium, hard
 
   // format: [{input: "1 2", output: "3"}, {input: "2 3", output: "5"}}]
   sample_test_cases Json?
   system_test_cases Json?
 
-  Submission Submission[]
-  ProblemTag ProblemTag[]
+  Submission       Submission[]
+  ProblemTag       ProblemTag[]
+  ContestProblem   ContestProblem[]
+  ProblemModerator ProblemModerator[]
 
   @@map("problems")
+}
+
+// store problem moderator
+model ProblemModerator {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  deleted_at DateTime?
+  status     Int?      @default(1)
+
+  user_id Int?
+  user    User? @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  problem_id Int?
+  problem    Problem? @relation(fields: [problem_id], references: [id], onDelete: Cascade)
+
+  @@map("problem_moderators")
 }
 
 // Store submission
