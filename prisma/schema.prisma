@@ -183,6 +183,8 @@ model Contest {
   deleted_at DateTime?
   status     Int?      @default(1)
 
+  approved Boolean? @default(false)
+
   name String?
   slug String? @unique
 
@@ -320,6 +322,10 @@ model Submission {
 
   // format: [{input: "1 2", output: "3"}, {input: "2 3", output: "5"}}]
   result Json?
+
+  // field for contest submission
+  is_contest Boolean? @default(false)
+  penalty    Int?     @default(0)
 
   problem_id Int?
   problem    Problem? @relation(fields: [problem_id], references: [id], onDelete: SetNull)
