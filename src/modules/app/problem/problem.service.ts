@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { CreateProblemDto } from './dto/create-problem.dto';
 import { UpdateProblemDto } from './dto/update-problem.dto';
 import { PrismaService } from '../../../providers/prisma/prisma.service';
-import { StringHelper } from 'src/common/helper/string.helper';
+import { StringHelper } from '../../../common/helper/string.helper';
 
 function getSampleTestCases(
   sample_test_cases_input: string,
