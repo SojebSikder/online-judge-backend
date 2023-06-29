@@ -30,7 +30,7 @@ export class SubmissionController {
 
   @ApiOperation({ summary: 'Read problems' })
   @Get()
-  async findAll(@Req() req: Request) {
+  async findAll(@Req() req) {
     const userId = req.user.userId;
 
     const result = await this.submissionService.findAll(userId);
@@ -39,7 +39,7 @@ export class SubmissionController {
 
   @ApiOperation({ summary: 'Show problem' })
   @Get(':id')
-  async findOne(@Req() req: Request, @Param('id') id: string) {
+  async findOne(@Req() req, @Param('id') id: string) {
     const userId = req.user.userId;
     const result = await this.submissionService.findOne(userId, +id);
 

@@ -28,10 +28,7 @@ export class ProblemController {
   @ApiOperation({ summary: 'Create problem' })
   // @CheckAbilities({ action: Action.Create, subject: 'Problem' })
   @Post()
-  async create(
-    @Req() req: Request,
-    @Body() createProblemDto: CreateProblemDto,
-  ) {
+  async create(@Req() req, @Body() createProblemDto: CreateProblemDto) {
     const user = req.user;
     const result = await this.problemService.create(
       user.userId,
@@ -48,7 +45,7 @@ export class ProblemController {
   @ApiOperation({ summary: 'Read problems' })
   // @CheckAbilities({ action: Action.Read, subject: 'Problem' })
   @Get()
-  async findAll(@Req() req: Request) {
+  async findAll(@Req() req) {
     const user = req.user;
 
     const result = await this.problemService.findAll();

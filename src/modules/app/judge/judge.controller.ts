@@ -32,7 +32,7 @@ export class JudgeController {
 
   @ApiOperation({ summary: 'Code submission' })
   @Post('submit')
-  async create(@Req() req: Request, @Body() createJudgeDto: CreateJudgeDto) {
+  async create(@Req() req, @Body() createJudgeDto: CreateJudgeDto) {
     const userId = req.user.userId;
     const result = await this.judgeService.create(userId, createJudgeDto);
     return result;
