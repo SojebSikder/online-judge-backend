@@ -28,7 +28,7 @@ export class AuthService extends PrismaClient {
       });
 
       if (user) {
-        if (!user.admin) {
+        if (!user.is_admin) {
           throw new UnauthorizedException('Only admin can access here');
         } else {
           const _isValidPassword = await bcrypt.compare(
