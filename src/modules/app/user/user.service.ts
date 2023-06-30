@@ -31,6 +31,9 @@ export class UserService extends PrismaClient {
         email: true,
         avatar: true,
         availability: true,
+        score: true,
+        created_at: true,
+        Profile: true,
       },
     });
 
@@ -42,10 +45,10 @@ export class UserService extends PrismaClient {
     }
   }
 
-  async profileDetails({ userId }) {
+  async profileDetails({ username }: { username: string }) {
     const user = await this.prisma.user.findFirst({
       where: {
-        id: userId,
+        username: username,
       },
       select: {
         fname: true,
@@ -55,6 +58,7 @@ export class UserService extends PrismaClient {
         avatar: true,
         availability: true,
         score: true,
+        created_at: true,
         Profile: true,
       },
     });
