@@ -25,6 +25,7 @@ export class UserService extends PrismaClient {
         id: userId,
       },
       select: {
+        id: true,
         fname: true,
         lname: true,
         username: true,
@@ -33,9 +34,16 @@ export class UserService extends PrismaClient {
         availability: true,
         score: true,
         created_at: true,
-        Profile: true,
       },
     });
+
+    const profile = await this.prisma.profile.findFirst({
+      where: {
+        user_id: user.id,
+      },
+    });
+
+    user['profile'] = profile;
 
     if (user) {
       // const excludedData = PrismaHelper.exclude(user, ['password']);
@@ -51,6 +59,7 @@ export class UserService extends PrismaClient {
         username: username,
       },
       select: {
+        id: true,
         fname: true,
         lname: true,
         username: true,
@@ -59,9 +68,16 @@ export class UserService extends PrismaClient {
         availability: true,
         score: true,
         created_at: true,
-        Profile: true,
       },
     });
+
+    const profile = await this.prisma.profile.findFirst({
+      where: {
+        user_id: user.id,
+      },
+    });
+
+    user['profile'] = profile;
 
     if (user) {
       return user;
