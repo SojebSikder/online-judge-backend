@@ -51,6 +51,25 @@ export class UserController {
     }
   }
 
+  @ApiOperation({ summary: 'Get user profile info' })
+  @ApiResponse({ schema: { enum: [UserEnum] } })
+  @UseGuards(JwtAuthGuard)
+  @Get('profile/:username')
+  async profile(@Req() req) {
+    const userId = req.user.userId;
+
+    const data = await this.userService.profileDetails({ userId: userId });
+    if (data) {
+      return {
+        data: data,
+      };
+    } else {
+      return {
+        error: true,
+      };
+    }
+  }
+
   @UseGuards(JwtAuthGuard, AbilitiesGuard)
   @CheckAbilities({ action: Action.Delete, subject: 'User' })
   @Delete(':id')

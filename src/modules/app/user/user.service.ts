@@ -42,6 +42,30 @@ export class UserService extends PrismaClient {
     }
   }
 
+  async profileDetails({ userId }) {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
+      select: {
+        fname: true,
+        lname: true,
+        username: true,
+        email: true,
+        avatar: true,
+        availability: true,
+        score: true,
+        Profile: true,
+      },
+    });
+
+    if (user) {
+      return user;
+    } else {
+      return false;
+    }
+  }
+
   remove(id: number, userId) {
     return 'delete something';
   }
