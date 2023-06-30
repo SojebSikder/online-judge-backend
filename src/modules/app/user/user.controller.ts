@@ -61,10 +61,9 @@ export class UserController {
 
   @ApiOperation({ summary: 'Get user profile info' })
   @ApiResponse({ schema: { enum: [UserEnum] } })
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('profile/:username')
   async profile(@Req() req) {
-    const userId = req.user.userId;
     const username = req.params.username;
 
     const data = await this.userService.profileDetails({
