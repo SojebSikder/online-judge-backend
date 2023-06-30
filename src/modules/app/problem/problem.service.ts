@@ -64,20 +64,20 @@ export class ProblemService extends PrismaClient {
         system_test_cases_output,
       );
 
-      // create slug
-      let slug = StringHelper.slugify(name);
-
-      const checkProblem = await this.prisma.problem.findFirst({
-        where: {
-          slug: slug,
-        },
-      });
-
-      if (checkProblem) {
-        slug = slug + '-' + StringHelper.randomString(5);
-      }
-
       if (name) {
+        // create slug
+        let slug = StringHelper.slugify(name);
+
+        const checkProblem = await this.prisma.problem.findFirst({
+          where: {
+            slug: slug,
+          },
+        });
+
+        if (checkProblem) {
+          slug = slug + '-' + StringHelper.randomString(5);
+        }
+
         Object.assign(data, {
           name: name,
           slug: slug,
@@ -151,9 +151,18 @@ export class ProblemService extends PrismaClient {
     }
   }
 
-  async findAll() {
-    const data = await this.prisma.problem.findMany();
-    return data;
+  async findAll(userId: number, me: number) {
+    if (me) {
+      const data = await this.prisma.problem.findMany({
+        where: {
+          author_id: userId,
+        },
+      });
+      return data;
+    } else {
+      const data = await this.prisma.problem.findMany();
+      return data;
+    }
   }
 
   async findOne(id: number) {
@@ -166,11 +175,158 @@ export class ProblemService extends PrismaClient {
     return data;
   }
 
-  update(id: number, updateProblemDto: UpdateProblemDto) {
-    return `This action updates a #${id} problem`;
+  async update(userId: number, id: number, updateProblemDto: UpdateProblemDto) {
+    try {
+      const data = {};
+
+      const name = updateProblemDto.name;
+      const statement = updateProblemDto.statement;
+      const time_limit = updateProblemDto.time_limit;
+      const memory_limit = updateProblemDto.memory_limit;
+
+      const input_format = updateProblemDto.input_format;
+      const output_format = updateProblemDto.output_format;
+
+      const note = updateProblemDto.note;
+      const difficulty = updateProblemDto.difficulty;
+
+      const sample_test_cases_input = updateProblemDto.sample_test_cases_input;
+      const sample_test_cases_output =
+        updateProblemDto.sample_test_cases_output;
+
+      const system_test_cases_input = updateProblemDto.system_test_cases_input;
+      const system_test_cases_output =
+        updateProblemDto.system_test_cases_output;
+
+      const sample_test_cases = getSampleTestCases(
+        sample_test_cases_input,
+        sample_test_cases_output,
+      );
+
+      const system_test_cases = getSampleTestCases(
+        system_test_cases_input,
+        system_test_cases_output,
+      );
+
+      if (name) {
+        // create slug
+        let slug = StringHelper.slugify(name);
+
+        const checkProblem = await this.prisma.problem.findFirst({
+          where: {
+            slug: slug,
+          },
+        });
+
+        if (checkProblem) {
+          slug = slug + '-' + StringHelper.randomString(5);
+        }
+
+        Object.assign(data, {
+          name: name,
+          slug: slug,
+        });
+      }
+
+      if (statement) {
+        Object.assign(data, {
+          statement: statement,
+        });
+      }
+
+      if (time_limit) {
+        Object.assign(data, {
+          time_limit: Number(time_limit),
+        });
+      }
+      if (memory_limit) {
+        Object.assign(data, {
+          memory_limit: Number(memory_limit),
+        });
+      }
+
+      if (input_format) {
+        Object.assign(data, {
+          input_format: input_format,
+        });
+      }
+      if (output_format) {
+        Object.assign(data, {
+          output_format: output_format,
+        });
+      }
+      if (note) {
+        Object.assign(data, {
+          note: note,
+        });
+      }
+      if (difficulty) {
+        Object.assign(data, {
+          difficulty: difficulty,
+        });
+      }
+
+      if (sample_test_cases) {
+        Object.assign(data, {
+          sample_test_cases: sample_test_cases,
+        });
+      }
+      if (system_test_cases) {
+        Object.assign(data, {
+          system_test_cases: system_test_cases,
+        });
+      }
+
+      const result = await this.prisma.problem.updateMany({
+        where: {
+          AND: [
+            {
+              id: id,
+            },
+            {
+              author_id: userId,
+            },
+          ],
+        },
+        data: {
+          ...data,
+          author_id: userId,
+        },
+      });
+
+      if (result) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      return false;
+      // throw error;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} problem`;
+  async remove(userId: number, id: number) {
+    try {
+      const result = await this.prisma.problem.deleteMany({
+        where: {
+          AND: [
+            {
+              id: id,
+            },
+            {
+              author_id: userId,
+            },
+          ],
+        },
+      });
+
+      if (result) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      return false;
+    }
   }
 }

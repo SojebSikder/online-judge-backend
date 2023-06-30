@@ -44,8 +44,9 @@ export class ProblemController {
   @Get()
   async findAll(@Req() req) {
     const userId = req.user.userId;
+    const me = req.query.me;
 
-    const result = await this.problemService.findAll();
+    const result = await this.problemService.findAll(userId, me);
     return { data: result };
   }
 
@@ -59,16 +60,40 @@ export class ProblemController {
   }
 
   @ApiOperation({ summary: 'Update problem' })
-  @CheckAbilities({ action: Action.Update, subject: 'Problem' })
+  // @CheckAbilities({ action: Action.Update, subject: 'Problem' })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProblemDto: UpdateProblemDto) {
-    return this.problemService.update(+id, updateProblemDto);
+  async update(
+    @Req() req,
+    @Param('id') id: string,
+    @Body() updateProblemDto: UpdateProblemDto,
+  ) {
+    const userId = req.user.userId;
+
+    const result = await this.problemService.update(
+      userId,
+      +id,
+      updateProblemDto,
+    );
+
+    if (result) {
+      return { message: 'Updated successfully' };
+    } else {
+      return { message: 'Something went wrong' };
+    }
   }
 
   @ApiOperation({ summary: 'Delete problem' })
-  @CheckAbilities({ action: Action.Delete, subject: 'Problem' })
+  // @CheckAbilities({ action: Action.Delete, subject: 'Problem' })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.problemService.remove(+id);
+  remove(@Req() req, @Param('id') id: string) {
+    const userId = req.user.userId;
+
+    const result = this.problemService.remove(userId, +id);
+
+    if (result) {
+      return { message: 'Deleted successfully' };
+    } else {
+      return { message: 'Something went wrong' };
+    }
   }
 }

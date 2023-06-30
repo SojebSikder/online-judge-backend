@@ -116,6 +116,7 @@ const test = function (rootPath, problem, submission, op): Promise<any[]> {
 
                     const curResult = {
                       actualOutput: actualOutput,
+                      expectedOutput: expectedOutput,
                       time: parseFloat(time),
                       memory: parseFloat(memory),
                       CE: false,
