@@ -66,6 +66,44 @@ export class UserService extends PrismaClient {
     }
   }
 
+  async update(userId: number, updateUserDto: UpdateUserDto) {
+    try {
+      const data = {};
+      if (updateUserDto.fname) {
+        data['fname'] = updateUserDto.fname;
+      }
+      if (updateUserDto.lname) {
+        data['lname'] = updateUserDto.lname;
+      }
+      if (updateUserDto.username) {
+        data['username'] = updateUserDto.username;
+      }
+      // if (updateUserDto.email) {
+      //   data['email'] = updateUserDto.email;
+      // }
+
+      const user = await this.prisma.user.updateMany({
+        where: {
+          AND: [
+            {
+              id: userId,
+            },
+          ],
+        },
+        data: {
+          ...data,
+        },
+      });
+      if (user) {
+        return user;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      return false;
+    }
+  }
+
   remove(id: number, userId) {
     return 'delete something';
   }

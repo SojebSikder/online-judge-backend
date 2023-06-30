@@ -290,7 +290,6 @@ export class ProblemService extends PrismaClient {
         },
         data: {
           ...data,
-          author_id: userId,
         },
       });
 

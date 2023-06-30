@@ -24,6 +24,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { UserEnum } from './entities/user.entity';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @ApiBearerAuth()
 @ApiTags('User')
@@ -66,6 +67,26 @@ export class UserController {
     } else {
       return {
         error: true,
+      };
+    }
+  }
+
+  @ApiOperation({ summary: 'Update user' })
+  @UseGuards(JwtAuthGuard, AbilitiesGuard)
+  // @CheckAbilities({ action: Action.Update, subject: 'User' })
+  @Patch()
+  async update(@Req() req, @Body() updateUserDto: UpdateUserDto) {
+    const userId = req.user.userId;
+    const user = await this.userService.update(userId, updateUserDto);
+    if (user) {
+      return {
+        success: true,
+        message: 'Updated successfully',
+      };
+    } else {
+      return {
+        error: true,
+        message: 'User not updated',
       };
     }
   }
