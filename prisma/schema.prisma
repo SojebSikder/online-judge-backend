@@ -51,7 +51,7 @@ model Profile {
   user_id Int?
   user    User? @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
-  date_of_birth DateTime?
+  date_of_birth DateTime? @db.Date
 
   country      String?
   city         String?
