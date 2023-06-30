@@ -66,7 +66,15 @@ export class UserService extends PrismaClient {
     }
   }
 
-  async update(userId: number, updateUserDto: UpdateUserDto) {
+  async update({
+    userId,
+    avatar,
+    updateUserDto,
+  }: {
+    userId: number;
+    avatar?: string;
+    updateUserDto: UpdateUserDto;
+  }) {
     try {
       const data = {};
       if (updateUserDto.fname) {
@@ -78,17 +86,51 @@ export class UserService extends PrismaClient {
       if (updateUserDto.username) {
         data['username'] = updateUserDto.username;
       }
-      // if (updateUserDto.email) {
-      //   data['email'] = updateUserDto.email;
-      // }
+      if (updateUserDto.email) {
+        data['email'] = updateUserDto.email;
+      }
+      if (avatar) {
+        data['avatar'] = avatar;
+      }
 
-      const user = await this.prisma.user.updateMany({
+      if (updateUserDto.date_of_birth) {
+        data['date_of_birth'] = updateUserDto.date_of_birth;
+      }
+      if (updateUserDto.country) {
+        data['country'] = updateUserDto.country;
+      }
+      if (updateUserDto.city) {
+        data['city'] = updateUserDto.city;
+      }
+      if (updateUserDto.organization) {
+        data['organization'] = updateUserDto.organization;
+      }
+
+      if (updateUserDto.recipient_name) {
+        data['recipient_name'] = updateUserDto.recipient_name;
+      }
+      if (updateUserDto.recipient_zip_code) {
+        data['recipient_zip_code'] = updateUserDto.recipient_zip_code;
+      }
+      if (updateUserDto.recipient_country) {
+        data['recipient_country'] = updateUserDto.recipient_country;
+      }
+      if (updateUserDto.recipient_state) {
+        data['recipient_state'] = updateUserDto.recipient_state;
+      }
+      if (updateUserDto.recipient_city) {
+        data['recipient_city'] = updateUserDto.recipient_city;
+      }
+      if (updateUserDto.recipient_address) {
+        data['recipient_address'] = updateUserDto.recipient_address;
+      }
+      if (updateUserDto.recipient_phone_number) {
+        data['recipient_phone_number'] = updateUserDto.recipient_phone_number;
+      }
+
+      const user = await this.prisma.user.update({
         where: {
-          AND: [
-            {
-              id: userId,
-            },
-          ],
+          id: userId,
         },
         data: {
           ...data,

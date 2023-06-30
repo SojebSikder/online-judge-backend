@@ -1,5 +1,5 @@
 import { ConfigModule } from '@nestjs/config';
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { BullModule } from '@nestjs/bull';
@@ -16,7 +16,8 @@ import { SubmissionModule } from './modules/app/submission/submission.module';
 import { AbilityModule } from './providers/ability/ability.module';
 import { UserModule } from './modules/app/user/user.module';
 import { MailModule } from './providers/mail/mail.module';
-
+// import { ServeStaticModule } from '@nestjs/serve-static';
+// import { join } from 'path';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -34,6 +35,9 @@ import { MailModule } from './providers/mail/mail.module';
       ttl: 60,
       limit: 10,
     }),
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, '..', 'public'),
+    // }),
     PrismaModule,
     AuthModule,
     AbilityModule,

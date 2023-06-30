@@ -5,15 +5,26 @@ import helmet from 'helmet';
 
 // internal imports
 import { AppModule } from './app.module';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     rawBody: true,
   });
-
   app.setGlobalPrefix('api');
+  // app.useBodyParser('json', { limit: '50mb' });
+  // app.useBodyParser('urlencoded', { extended: true, limit: '50mb' });
   app.enableCors();
   app.use(helmet());
+  app.useStaticAssets(join(__dirname, '..', 'public'), {
+    index: false,
+    prefix: '/public',
+  });
+  app.useStaticAssets(join(__dirname, '..', 'public/storage'), {
+    index: false,
+    prefix: '/storage',
+  });
   // swagger
   const options = new DocumentBuilder()
     .setTitle(`${process.env.APP_NAME} api`)

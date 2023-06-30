@@ -7,6 +7,11 @@ import {
   Delete,
   UseGuards,
   Req,
+  UseInterceptors,
+  UploadedFile,
+  ParseFilePipe,
+  FileTypeValidator,
+  MaxFileSizeValidator,
 } from '@nestjs/common';
 import { UcodeRepository } from '../../../common/repository/ucode/ucode.repository';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
@@ -25,6 +30,8 @@ import {
 } from '@nestjs/swagger';
 import { UserEnum } from './entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @ApiBearerAuth()
 @ApiTags('User')
@@ -73,11 +80,36 @@ export class UserController {
 
   @ApiOperation({ summary: 'Update user' })
   @UseGuards(JwtAuthGuard, AbilitiesGuard)
-  // @CheckAbilities({ action: Action.Update, subject: 'User' })
   @Patch()
-  async update(@Req() req, @Body() updateUserDto: UpdateUserDto) {
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './public/storage/avatar',
+      }),
+    }),
+  )
+  async update(
+    @Req() req,
+    @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          // new MaxFileSizeValidator({ maxSize: 3000 }),
+          new FileTypeValidator({ fileType: 'image/jpeg' }),
+          new FileTypeValidator({ fileType: 'image/jpg' }),
+          new FileTypeValidator({ fileType: 'image/png' }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
     const userId = req.user.userId;
-    const user = await this.userService.update(userId, updateUserDto);
+
+    const user = await this.userService.update({
+      userId,
+      avatar: file.filename,
+      updateUserDto,
+    });
     if (user) {
       return {
         success: true,
