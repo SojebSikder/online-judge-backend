@@ -12,6 +12,7 @@ import {
   ParseFilePipe,
   FileTypeValidator,
   MaxFileSizeValidator,
+  Post,
 } from '@nestjs/common';
 import { UcodeRepository } from '../../../common/repository/ucode/ucode.repository';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
@@ -83,33 +84,11 @@ export class UserController {
   @ApiOperation({ summary: 'Update user' })
   @UseGuards(JwtAuthGuard, AbilitiesGuard)
   @Patch()
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './public/storage/avatar',
-      }),
-    }),
-  )
-  async update(
-    @Req() req,
-    @Body() updateUserDto: UpdateUserDto,
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          // new MaxFileSizeValidator({ maxSize: 3000 }),
-          new FileTypeValidator({ fileType: 'image/jpeg' }),
-          new FileTypeValidator({ fileType: 'image/jpg' }),
-          new FileTypeValidator({ fileType: 'image/png' }),
-        ],
-      }),
-    )
-    file: Express.Multer.File,
-  ) {
+  async update(@Req() req, @Body() updateUserDto: UpdateUserDto) {
     const userId = req.user.userId;
 
     const user = await this.userService.update({
       userId,
-      avatar: file.filename,
       updateUserDto,
     });
     if (user) {
@@ -121,6 +100,49 @@ export class UserController {
       return {
         error: true,
         message: 'User not updated',
+      };
+    }
+  }
+
+  @ApiOperation({ summary: 'Update user avatar' })
+  @UseGuards(JwtAuthGuard, AbilitiesGuard)
+  @Patch('avatar')
+  @UseInterceptors(
+    FileInterceptor('avatar', {
+      storage: diskStorage({
+        destination: './public/storage/avatar',
+      }),
+    }),
+  )
+  async setAvatar(
+    @Req() req,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          // new MaxFileSizeValidator({ maxSize: 3000 }),
+          new FileTypeValidator({ fileType: 'image/jpeg' }),
+          new FileTypeValidator({ fileType: 'image/jpg' }),
+          new FileTypeValidator({ fileType: 'image/png' }),
+        ],
+      }),
+    )
+    avatar?: Express.Multer.File,
+  ) {
+    const userId = req.user.userId;
+
+    const user = await this.userService.update({
+      userId,
+      avatar: avatar.filename,
+    });
+    if (user) {
+      return {
+        success: true,
+        message: 'Avatar updated successfully',
+      };
+    } else {
+      return {
+        error: true,
+        message: 'Something went wrong',
       };
     }
   }
