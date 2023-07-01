@@ -315,16 +315,16 @@ export class ProblemService extends PrismaClient {
   async saveTags(problemId: number, tags: string[]) {
     try {
       if (tags.length > 0) {
+        // remove product tags
+        await this.prisma.problemTag.deleteMany({
+          where: {
+            problem_id: problemId,
+          },
+        });
+
         for (let i = 0; i < tags.length; i++) {
           await this.prisma.$transaction(async (prisma) => {
             const tag = tags[i];
-
-            // remove product tags
-            await prisma.problemTag.deleteMany({
-              where: {
-                problem_id: problemId,
-              },
-            });
 
             // check tag exist
             let checkTag = await prisma.tag.findFirst({
