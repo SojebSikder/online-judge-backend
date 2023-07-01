@@ -21,17 +21,29 @@ export class JudgeService extends PrismaClient {
   }
 
   async run(createJudgeDto: CreateJudgeDto) {
-    const response = await this._processJudge(createJudgeDto);
+    const response = await this._processJudge({ createJudgeDto });
 
     return response;
   }
   async create(userId, createJudgeDto: CreateJudgeDto) {
-    const response = await this._processJudge(createJudgeDto);
+    const response = await this._processJudge({
+      userId,
+      createJudgeDto,
+      operation: 'submitcode',
+    });
 
     return response;
   }
 
-  async _processJudge(createJudgeDto: CreateJudgeDto) {
+  async _processJudge({
+    userId,
+    createJudgeDto,
+    operation = 'runcode',
+  }: {
+    userId?: number;
+    createJudgeDto: CreateJudgeDto;
+    operation?: string;
+  }) {
     const code = createJudgeDto.code;
     const language = createJudgeDto.language;
     const problem_id = createJudgeDto.problem_id;
@@ -76,7 +88,7 @@ export class JudgeService extends PrismaClient {
       language: language, // cpp, py
       verdict: '',
     };
-    const op = 'runcode';
+    const op = operation; //'runcode';
 
     const codeSandbox = new CodeSandbox({
       rootPath: appConfig().app.root_path + '/submissions/',
@@ -127,6 +139,16 @@ export class JudgeService extends PrismaClient {
         else if (verdicts.includes('AC')) submission.verdict = 'AC';
 
         // console.log(submission.verdict, finalResult);
+        if (op == 'submitcode') {
+          await SubmissionRepository.createSubmission({
+            code: code,
+            language: language,
+            verdict: submission.verdict,
+            result: finalResult,
+            problemId: problem_id,
+            userId: userId,
+          });
+        }
 
         return {
           data: { verdict: submission.verdict, result: finalResult },

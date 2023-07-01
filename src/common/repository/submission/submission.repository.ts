@@ -16,6 +16,15 @@ export class SubmissionRepository {
     result,
     problemId,
     userId,
+  }: {
+    code: string;
+    language: string;
+    verdict: string;
+    time?: number;
+    memory?: number;
+    result: any;
+    problemId: number;
+    userId: number;
   }) {
     const response = await prisma.submission.create({
       data: {
