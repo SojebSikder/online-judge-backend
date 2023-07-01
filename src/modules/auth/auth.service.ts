@@ -69,6 +69,10 @@ export class AuthService extends PrismaClient {
   async login({ email, userId }) {
     const payload = { email: email, sub: userId };
     const token = this.jwtService.sign(payload);
+
+    // update last login
+    await UserRepository.updateUserLastLogin({ userId: userId });
+
     return {
       // access_token: token,
       message: 'Logged in successfully',

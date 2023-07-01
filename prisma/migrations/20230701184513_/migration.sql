@@ -5,6 +5,7 @@ CREATE TABLE `users` (
     `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `deleted_at` DATETIME(3) NULL,
     `status` INTEGER NULL DEFAULT 1,
+    `last_logged_in` DATETIME(3) NULL,
     `availability` VARCHAR(191) NULL,
     `score` INTEGER NULL DEFAULT 0,
     `email` VARCHAR(191) NULL,
@@ -24,6 +25,7 @@ CREATE TABLE `users` (
 CREATE TABLE `profiles` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `user_id` INTEGER NULL,
+    `bio` TEXT NULL,
     `date_of_birth` DATE NULL,
     `country` VARCHAR(191) NULL,
     `city` VARCHAR(191) NULL,
@@ -100,6 +102,50 @@ CREATE TABLE `role_users` (
     `user_id` INTEGER NOT NULL,
 
     PRIMARY KEY (`role_id`, `user_id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `teams` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `deleted_at` DATETIME(3) NULL,
+    `status` INTEGER NULL DEFAULT 1,
+    `name` VARCHAR(191) NULL,
+    `username` VARCHAR(191) NULL,
+    `description` VARCHAR(191) NULL,
+    `avatar` VARCHAR(191) NULL,
+    `organization` VARCHAR(191) NULL,
+    `country` VARCHAR(191) NULL,
+    `owner_id` INTEGER NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `team_members` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `deleted_at` DATETIME(3) NULL,
+    `status` INTEGER NULL DEFAULT 1,
+    `team_id` INTEGER NULL,
+    `user_id` INTEGER NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `bookmarks` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `deleted_at` DATETIME(3) NULL,
+    `status` INTEGER NULL DEFAULT 1,
+    `user_id` INTEGER NULL,
+    `problem_id` INTEGER NULL,
+
+    PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -265,6 +311,21 @@ ALTER TABLE `role_users` ADD CONSTRAINT `role_users_role_id_fkey` FOREIGN KEY (`
 
 -- AddForeignKey
 ALTER TABLE `role_users` ADD CONSTRAINT `role_users_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `teams` ADD CONSTRAINT `teams_owner_id_fkey` FOREIGN KEY (`owner_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `team_members` ADD CONSTRAINT `team_members_team_id_fkey` FOREIGN KEY (`team_id`) REFERENCES `teams`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `team_members` ADD CONSTRAINT `team_members_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `bookmarks` ADD CONSTRAINT `bookmarks_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `bookmarks` ADD CONSTRAINT `bookmarks_problem_id_fkey` FOREIGN KEY (`problem_id`) REFERENCES `problems`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `problem_tags` ADD CONSTRAINT `problem_tags_problem_id_fkey` FOREIGN KEY (`problem_id`) REFERENCES `problems`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

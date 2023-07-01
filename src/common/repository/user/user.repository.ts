@@ -93,4 +93,25 @@ export class UserRepository {
       throw error;
     }
   }
+
+  static async updateUserLastLogin({ userId }) {
+    try {
+      const user = await prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          last_logged_in: DateHelper.now(),
+        },
+      });
+
+      if (user) {
+        return user;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
 }

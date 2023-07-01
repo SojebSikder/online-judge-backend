@@ -14,6 +14,9 @@ export class CreateUserDto {
   email?: string;
 
   @ApiProperty()
+  bio?: string;
+
+  @ApiProperty()
   date_of_birth?: string;
   @ApiProperty()
   country?: string;

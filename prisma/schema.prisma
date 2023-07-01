@@ -18,6 +18,8 @@ model User {
   deleted_at DateTime?
   status     Int?      @default(1)
 
+  last_logged_in DateTime?
+
   // available values:
   // online, busy, offline
   availability String?
@@ -41,6 +43,9 @@ model User {
   ContestModerator    ContestModerator[]
   ProblemModerator    ProblemModerator[]
   Profile             Profile[]
+  Team                Team[]
+  TeamMember          TeamMember[]
+  Bookmark            Bookmark[]
 
   @@map("users")
 }
@@ -50,6 +55,8 @@ model Profile {
 
   user_id Int?
   user    User? @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  bio String? @db.Text
 
   date_of_birth DateTime? @db.Date
 
@@ -172,6 +179,66 @@ model RoleUser {
 
 //   @@map("notes")
 // }
+
+// store team
+model Team {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  deleted_at DateTime?
+  status     Int?      @default(1)
+
+  name        String?
+  username    String?
+  description String?
+  avatar      String?
+
+  organization String?
+  country      String?
+
+  // team owner
+  owner_id Int?
+  owner    User? @relation(fields: [owner_id], references: [id], onDelete: Cascade)
+
+  // team members
+  TeamMember TeamMember[]
+
+  @@map("teams")
+}
+
+// store team member
+model TeamMember {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  deleted_at DateTime?
+  status     Int?      @default(1)
+
+  team_id Int?
+  team    Team? @relation(fields: [team_id], references: [id], onDelete: Cascade)
+
+  user_id Int?
+  user    User? @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("team_members")
+}
+
+// store bookmark
+model Bookmark {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  deleted_at DateTime?
+  status     Int?      @default(1)
+
+  user_id Int?
+  user    User? @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  problem_id Int?
+  problem    Problem? @relation(fields: [problem_id], references: [id], onDelete: Cascade)
+
+  @@map("bookmarks")
+}
 
 // Store tags (e.x. stack, queue, graph, etc)
 model Tag {
@@ -312,6 +379,7 @@ model Problem {
   ProblemTag       ProblemTag[]
   ContestProblem   ContestProblem[]
   ProblemModerator ProblemModerator[]
+  Bookmark         Bookmark[]
 
   @@map("problems")
 }

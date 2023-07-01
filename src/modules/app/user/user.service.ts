@@ -57,13 +57,7 @@ export class UserService extends PrismaClient {
     }
   }
 
-  async profileDetails({
-    userId,
-    username,
-  }: {
-    userId?: number;
-    username: string;
-  }) {
+  async profileDetails({ username }: { username: string }) {
     const user = await this.prisma.user.findFirst({
       where: {
         username: username,
@@ -93,11 +87,24 @@ export class UserService extends PrismaClient {
       },
     });
 
+    const submissions = await this.prisma.submission.findMany({
+      where: {
+        user_id: user.id,
+      },
+      select: {
+        problem_id: true,
+        verdict: true,
+        language: true,
+        created_at: true,
+      },
+    });
+
     user.avatar = `${appConfig().app.url}/${appConfig().storageUrl.avatar}/${
       user.avatar
     }`;
 
     user['profile'] = profile;
+    user['submissions'] = submissions;
 
     if (user) {
       return user;
@@ -157,6 +164,9 @@ export class UserService extends PrismaClient {
           data['email'] = updateUserDto.email;
         }
 
+        if (updateUserDto.bio) {
+          profileData['bio'] = new Date(updateUserDto.bio);
+        }
         if (updateUserDto.date_of_birth) {
           profileData['date_of_birth'] = new Date(updateUserDto.date_of_birth);
         }
