@@ -161,6 +161,19 @@ export class ProblemService extends PrismaClient {
         where: {
           author_id: userId,
         },
+        include: {
+          ProblemTag: {
+            select: {
+              id: true,
+              tag: {
+                select: {
+                  name: true,
+                  slug: true,
+                },
+              },
+            },
+          },
+        },
       });
       return data;
     } else {
@@ -173,6 +186,19 @@ export class ProblemService extends PrismaClient {
     const data = await this.prisma.problem.findFirst({
       where: {
         id: id,
+      },
+      include: {
+        ProblemTag: {
+          select: {
+            id: true,
+            tag: {
+              select: {
+                name: true,
+                slug: true,
+              },
+            },
+          },
+        },
       },
     });
 
