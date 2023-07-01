@@ -12,7 +12,6 @@ import {
   ParseFilePipe,
   FileTypeValidator,
   MaxFileSizeValidator,
-  Post,
 } from '@nestjs/common';
 import { UcodeRepository } from '../../../common/repository/ucode/ucode.repository';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
@@ -33,6 +32,7 @@ import { UserEnum } from './entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import appConfig from '../../../config/app.config';
 
 @ApiBearerAuth()
 @ApiTags('User')
@@ -110,7 +110,15 @@ export class UserController {
   @UseInterceptors(
     FileInterceptor('avatar', {
       storage: diskStorage({
-        destination: './public/storage/avatar',
+        destination:
+          appConfig().storageUrl.rootUrl + '/' + appConfig().storageUrl.avatar,
+        filename: (req, file, cb) => {
+          const randomName = Array(32)
+            .fill(null)
+            .map(() => Math.round(Math.random() * 16).toString(16))
+            .join('');
+          return cb(null, `${randomName}${file.originalname}`);
+        },
       }),
     }),
   )
@@ -119,10 +127,8 @@ export class UserController {
     @UploadedFile(
       new ParseFilePipe({
         validators: [
-          // new MaxFileSizeValidator({ maxSize: 3000 }),
-          new FileTypeValidator({ fileType: 'image/jpeg' }),
-          new FileTypeValidator({ fileType: 'image/jpg' }),
-          new FileTypeValidator({ fileType: 'image/png' }),
+          new MaxFileSizeValidator({ maxSize: 10485760 }), // 10mb
+          new FileTypeValidator({ fileType: 'image/*' }),
         ],
       }),
     )

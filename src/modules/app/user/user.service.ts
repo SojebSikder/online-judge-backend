@@ -9,6 +9,7 @@ import appConfig from '../../../config/app.config';
 import { PrismaService } from '../../../providers/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { LocalAdapter } from '../../../common/lib/Disk';
 
 @Injectable()
 export class UserService extends PrismaClient {
@@ -97,60 +98,82 @@ export class UserService extends PrismaClient {
   }) {
     try {
       const data = {};
-      if (updateUserDto.fname) {
-        data['fname'] = updateUserDto.fname;
-      }
-      if (updateUserDto.lname) {
-        data['lname'] = updateUserDto.lname;
-      }
-      if (updateUserDto.username) {
-        data['username'] = updateUserDto.username;
-      }
-      if (updateUserDto.email) {
-        data['email'] = updateUserDto.email;
-      }
+      const profileData = {};
+
       if (avatar) {
+        // remove previus image
+        const userData = await this.prisma.user.findFirst({
+          where: {
+            id: userId,
+          },
+          select: {
+            avatar: true,
+          },
+        });
+
+        if (userData.avatar) {
+          const localAdapter = new LocalAdapter({
+            connection: {
+              rootUrl: appConfig().storageUrl.rootUrl,
+            },
+          });
+          await localAdapter.delete(
+            `${appConfig().storageUrl.avatar}/${userData.avatar}`,
+          );
+        }
         data['avatar'] = avatar;
       }
 
-      const profileData = {};
+      if (updateUserDto) {
+        if (updateUserDto.fname) {
+          data['fname'] = updateUserDto.fname;
+        }
+        if (updateUserDto.lname) {
+          data['lname'] = updateUserDto.lname;
+        }
+        if (updateUserDto.username) {
+          data['username'] = updateUserDto.username;
+        }
+        if (updateUserDto.email) {
+          data['email'] = updateUserDto.email;
+        }
 
-      if (updateUserDto.date_of_birth) {
-        profileData['date_of_birth'] = new Date(updateUserDto.date_of_birth);
-      }
-      if (updateUserDto.country) {
-        profileData['country'] = updateUserDto.country;
-      }
-      if (updateUserDto.city) {
-        profileData['city'] = updateUserDto.city;
-      }
-      if (updateUserDto.organization) {
-        profileData['organization'] = updateUserDto.organization;
-      }
+        if (updateUserDto.date_of_birth) {
+          profileData['date_of_birth'] = new Date(updateUserDto.date_of_birth);
+        }
+        if (updateUserDto.country) {
+          profileData['country'] = updateUserDto.country;
+        }
+        if (updateUserDto.city) {
+          profileData['city'] = updateUserDto.city;
+        }
+        if (updateUserDto.organization) {
+          profileData['organization'] = updateUserDto.organization;
+        }
 
-      if (updateUserDto.recipient_name) {
-        profileData['recipient_name'] = updateUserDto.recipient_name;
+        if (updateUserDto.recipient_name) {
+          profileData['recipient_name'] = updateUserDto.recipient_name;
+        }
+        if (updateUserDto.recipient_zip_code) {
+          profileData['recipient_zip_code'] = updateUserDto.recipient_zip_code;
+        }
+        if (updateUserDto.recipient_country) {
+          profileData['recipient_country'] = updateUserDto.recipient_country;
+        }
+        if (updateUserDto.recipient_state) {
+          profileData['recipient_state'] = updateUserDto.recipient_state;
+        }
+        if (updateUserDto.recipient_city) {
+          profileData['recipient_city'] = updateUserDto.recipient_city;
+        }
+        if (updateUserDto.recipient_address) {
+          profileData['recipient_address'] = updateUserDto.recipient_address;
+        }
+        if (updateUserDto.recipient_phone_number) {
+          profileData['recipient_phone_number'] =
+            updateUserDto.recipient_phone_number;
+        }
       }
-      if (updateUserDto.recipient_zip_code) {
-        profileData['recipient_zip_code'] = updateUserDto.recipient_zip_code;
-      }
-      if (updateUserDto.recipient_country) {
-        profileData['recipient_country'] = updateUserDto.recipient_country;
-      }
-      if (updateUserDto.recipient_state) {
-        profileData['recipient_state'] = updateUserDto.recipient_state;
-      }
-      if (updateUserDto.recipient_city) {
-        profileData['recipient_city'] = updateUserDto.recipient_city;
-      }
-      if (updateUserDto.recipient_address) {
-        profileData['recipient_address'] = updateUserDto.recipient_address;
-      }
-      if (updateUserDto.recipient_phone_number) {
-        profileData['recipient_phone_number'] =
-          updateUserDto.recipient_phone_number;
-      }
-
       const user = await this.prisma.user.update({
         where: {
           id: userId,

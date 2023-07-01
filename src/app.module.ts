@@ -64,6 +64,6 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     // consumer.apply(LoggerMiddleware).forRoutes('*');
     // for the raw body
-    consumer.apply(RawBodyMiddleware).forRoutes('*');
+    // consumer.apply(RawBodyMiddleware).forRoutes('*');
   }
 }
