@@ -66,8 +66,10 @@ export class UserController {
   @Get('profile/:username')
   async profile(@Req() req) {
     const username = req.params.username;
+    const userId = req.user?.userId;
 
     const data = await this.userService.profileDetails({
+      userId: userId,
       username: username,
     });
     if (data) {
