@@ -75,8 +75,8 @@ export class JudgeService extends PrismaClient {
       },
     });
     const problem = {
-      time: problemData.time_limit || 1,
-      memory: problemData.memory_limit || 100,
+      timeLimit: problemData.time_limit || 1,
+      memoryLimit: problemData.memory_limit || 100,
       sampleTestcases: problemData.sample_test_cases || [],
       systemTestcases: problemData.system_test_cases || [],
       // sampleTestcases: [{ input: '', output: 'Hello world' }],
@@ -102,6 +102,8 @@ export class JudgeService extends PrismaClient {
       });
 
       if (result) {
+        let totalTime = 0;
+        let totalMemory = 0;
         const finalResult = [];
         const verdicts = [],
           testcases = [];
@@ -114,6 +116,8 @@ export class JudgeService extends PrismaClient {
               time: curResult.time,
               memory: curResult.memory,
             };
+          totalTime += curResult.time;
+          totalMemory += curResult.memory;
 
           for (const key in curResult) {
             if (curResult[key] !== false) {
@@ -147,6 +151,8 @@ export class JudgeService extends PrismaClient {
             result: finalResult,
             problemId: problem_id,
             userId: userId,
+            time: totalTime,
+            memory: totalMemory,
           });
         }
 

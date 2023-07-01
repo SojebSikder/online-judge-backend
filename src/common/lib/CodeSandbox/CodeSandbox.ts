@@ -19,7 +19,7 @@ const execute = function (
 ) {
   const codefileName = 'solution.' + language;
   // const commandText = `docker run --rm -v "$(pwd)/solution.cpp:/solution.cpp" -v "$(pwd)/testcase.txt:/testcase.txt" -v "$(pwd)/output.txt:/output.txt" -v "$(pwd)/timeMemory.txt:/timeMemory.txt" sojeboj cpp ./output.txt ./timeMemory.txt 100 100`;
-  const commandText = `docker run --rm -v "${filename}:/${codefileName}" -v "${testfileName}:/testcase.txt" -v "${outputfileName}:/output.txt" -v "${timeMemoryfileName}:/timeMemory.txt" sojeboj ${language} ./output.txt ./timeMemory.txt ${problem.time} ${problem.memory}`;
+  const commandText = `docker run --rm -v "${filename}:/${codefileName}" -v "${testfileName}:/testcase.txt" -v "${outputfileName}:/output.txt" -v "${timeMemoryfileName}:/timeMemory.txt" sojeboj ${language} ./output.txt ./timeMemory.txt ${problem.timeLimit} ${problem.memoryLimit}`;
   // return `docker run --rm -v="${filename}":/${codefileName}/ -v="${testfileName}":/testcase.txt/ -v="${outputfileName}":/output.txt/ -v="${timeMemoryfileName}":/timeMemory.txt/ online-judge ${language} output.txt timeMemory.txt ${problem.time} ${problem.memory}`;
 
   return commandText;
