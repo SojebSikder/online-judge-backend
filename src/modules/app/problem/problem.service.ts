@@ -337,6 +337,7 @@ export class ProblemService extends PrismaClient {
             checkTag = await this.prisma.tag.create({
               data: {
                 name: tag,
+                slug: StringHelper.slugify(tag),
               },
             });
           }
