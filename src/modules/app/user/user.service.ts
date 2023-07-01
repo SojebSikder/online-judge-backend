@@ -44,6 +44,9 @@ export class UserService extends PrismaClient {
       },
     });
 
+    user.avatar = `${appConfig().app.url}/${appConfig().storageUrl.avatar}/${
+      user.avatar
+    }`;
     user['profile'] = profile;
 
     if (user) {
@@ -77,6 +80,10 @@ export class UserService extends PrismaClient {
         user_id: user.id,
       },
     });
+
+    user.avatar = `${appConfig().app.url}/${appConfig().storageUrl.avatar}/${
+      user.avatar
+    }`;
 
     user['profile'] = profile;
 
