@@ -5,6 +5,9 @@ export class CreateProblemDto {
   name: string;
 
   @ApiProperty()
+  tags?: string[];
+
+  @ApiProperty()
   statement: string;
 
   @ApiProperty()
