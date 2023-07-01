@@ -189,9 +189,9 @@ model Tag {
 }
 
 model ProblemTag {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
 
   problem    Problem? @relation(fields: [problem_id], references: [id], onDelete: Cascade)
   problem_id Int?
@@ -226,9 +226,9 @@ model Contest {
 }
 
 model ContestProblem {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
 
   contest    Contest? @relation(fields: [contest_id], references: [id], onDelete: Cascade)
   contest_id Int?

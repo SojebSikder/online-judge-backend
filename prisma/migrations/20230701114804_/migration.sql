@@ -24,7 +24,7 @@ CREATE TABLE `users` (
 CREATE TABLE `profiles` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `user_id` INTEGER NULL,
-    `date_of_birth` DATETIME(3) NULL,
+    `date_of_birth` DATE NULL,
     `country` VARCHAR(191) NULL,
     `city` VARCHAR(191) NULL,
     `organization` VARCHAR(191) NULL,
@@ -118,8 +118,8 @@ CREATE TABLE `tags` (
 -- CreateTable
 CREATE TABLE `problem_tags` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `problem_id` INTEGER NULL,
     `tag_id` INTEGER NULL,
 
@@ -146,8 +146,8 @@ CREATE TABLE `contests` (
 -- CreateTable
 CREATE TABLE `contest_problems` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `contest_id` INTEGER NULL,
     `problem_id` INTEGER NULL,
     `max_score` INTEGER NULL DEFAULT 0,

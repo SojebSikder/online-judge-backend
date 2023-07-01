@@ -316,47 +316,49 @@ export class ProblemService extends PrismaClient {
     try {
       if (tags.length > 0) {
         for (let i = 0; i < tags.length; i++) {
-          const tag = tags[i];
+          await this.prisma.$transaction(async (prisma) => {
+            const tag = tags[i];
 
-          // remove product tags
-          await this.prisma.problemTag.deleteMany({
-            where: {
-              problem_id: problemId,
-            },
-          });
-
-          // check tag exist
-          let checkTag = await this.prisma.tag.findFirst({
-            where: {
-              name: tag,
-            },
-          });
-
-          // if not create new
-          if (!checkTag) {
-            checkTag = await this.prisma.tag.create({
-              data: {
-                name: tag,
-                slug: StringHelper.slugify(tag),
+            // remove product tags
+            await prisma.problemTag.deleteMany({
+              where: {
+                problem_id: problemId,
               },
             });
-          }
 
-          const checkProblemTag = await this.prisma.problemTag.findFirst({
-            where: {
-              problem_id: problemId,
-              tag_id: checkTag.id,
-            },
-          });
+            // check tag exist
+            let checkTag = await prisma.tag.findFirst({
+              where: {
+                name: tag,
+              },
+            });
 
-          if (!checkProblemTag) {
-            await this.prisma.problemTag.create({
-              data: {
+            // if not create new
+            if (!checkTag) {
+              checkTag = await prisma.tag.create({
+                data: {
+                  name: tag,
+                  slug: StringHelper.slugify(tag),
+                },
+              });
+            }
+
+            const checkProblemTag = await prisma.problemTag.findFirst({
+              where: {
                 problem_id: problemId,
                 tag_id: checkTag.id,
               },
             });
-          }
+
+            if (!checkProblemTag) {
+              await prisma.problemTag.create({
+                data: {
+                  problem_id: problemId,
+                  tag_id: checkTag.id,
+                },
+              });
+            }
+          });
         }
       } else {
         // remove product tags
