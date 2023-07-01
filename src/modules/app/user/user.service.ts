@@ -85,6 +85,12 @@ export class UserService extends PrismaClient {
       where: {
         user_id: user.id,
       },
+      select: {
+        user_id: true,
+        city: true,
+        country: true,
+        organization: true,
+      },
     });
 
     user.avatar = `${appConfig().app.url}/${appConfig().storageUrl.avatar}/${
@@ -92,21 +98,6 @@ export class UserService extends PrismaClient {
     }`;
 
     user['profile'] = profile;
-
-    if (userId) {
-      const isUserLoggedIn = await this.prisma.user.findFirst({
-        where: {
-          id: userId,
-        },
-      });
-      if (isUserLoggedIn) {
-        user['logged_in'] = true;
-      } else {
-        user['logged_in'] = false;
-      }
-    } else {
-      user['logged_in'] = false;
-    }
 
     if (user) {
       return user;
