@@ -285,6 +285,16 @@ model Contest {
   start_at DateTime?
   end_at   DateTime?
 
+  // contest type
+  // 1: public, 2: private
+  contest_type Int? @default(1)
+
+  // contest password for private contest.
+  password String? @unique
+
+  // 1: individual, 2: team, 3: any
+  participant_type Int? @default(1)
+
   ContestProblem      ContestProblem[]
   ContestRegistration ContestRegistration[]
   ContestModerator    ContestModerator[]
