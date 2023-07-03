@@ -104,8 +104,47 @@ export class UserService extends PrismaClient {
     }`;
 
     user['profile'] = profile;
-    user['submissions'] = submissions;
+    // user['submissions'] = submissions;
 
+    // submission stats
+    const submissionStates = [];
+
+    submissions.map((submission) => {
+      submissionStates.push({
+        date: DateHelper.format(submission.created_at, 'MMM YYYY'),
+        count: 1,
+      });
+    });
+
+    const output = [];
+
+    submissionStates.forEach((submissionState, index) => {
+      const existing = output.filter((v, i) => v.date === submissionState.date);
+      if (existing.length) {
+        const existingIndex = output.indexOf(existing[0]);
+        output[existingIndex].count = output[existingIndex].count + 1;
+      } else {
+        if (JSON.stringify(submissionState) !== '{}') {
+          output.push(submissionState);
+        }
+      }
+    });
+
+    const labels = [];
+    const data = [];
+
+    output.forEach((item) => {
+      labels.push(item.date);
+      data.push(item.count);
+    });
+
+    const submissionData = {
+      labels: labels,
+      data: data,
+    };
+    // end submission stats
+
+    user['stats'] = { submission: submissionData };
     if (user) {
       return user;
     } else {
