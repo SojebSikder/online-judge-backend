@@ -46,6 +46,7 @@ model User {
   Team                Team[]
   TeamMember          TeamMember[]
   Bookmark            Bookmark[]
+  Notification        Notification[]
 
   @@map("users")
 }
@@ -180,6 +181,29 @@ model RoleUser {
 //   @@map("notes")
 // }
 
+// store notification
+model Notification {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  deleted_at DateTime?
+  status     Int?      @default(1)
+
+  title String?
+  body  String? @db.Text
+
+  // action url
+  action String?
+
+  // 1 = not read, 2 = read
+  is_read Int? @default(1)
+
+  user_id Int?
+  user    User? @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
 // store team
 model Team {
   id         Int       @id @default(autoincrement())
@@ -279,21 +303,22 @@ model Contest {
 
   approved Boolean? @default(false)
 
-  name String?
-  slug String? @unique
+  name        String?
+  slug        String? @unique
+  description String? @db.Text
 
   start_at DateTime?
   end_at   DateTime?
 
   // contest type
-  // 1: public, 2: private
-  contest_type Int? @default(1)
+  // values: public, private
+  contest_type String? @default("public")
 
-  // contest password for private contest.
+  // contest participation password.
   password String? @unique
 
-  // 1: individual, 2: team, 3: any
-  participant_type Int? @default(1)
+  // values: individual, team, any
+  participant_type String? @default("individual")
 
   ContestProblem      ContestProblem[]
   ContestRegistration ContestRegistration[]
@@ -306,6 +331,9 @@ model ContestProblem {
   id         Int      @id @default(autoincrement())
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
+
+  // values: A-Z
+  sort_order String? @default("A")
 
   contest    Contest? @relation(fields: [contest_id], references: [id], onDelete: Cascade)
   contest_id Int?
@@ -325,6 +353,9 @@ model ContestModerator {
   updated_at DateTime  @default(now())
   deleted_at DateTime?
   status     Int?      @default(1)
+
+  // values: owner, editor, judge, viewer
+  role_type String? @default("viewer")
 
   user_id Int?
   user    User? @relation(fields: [user_id], references: [id], onDelete: Cascade)
@@ -401,6 +432,9 @@ model ProblemModerator {
   updated_at DateTime  @default(now())
   deleted_at DateTime?
   status     Int?      @default(1)
+
+  // values: owner, editor, tester, viewer
+  role_type String? @default("viewer")
 
   user_id Int?
   user    User? @relation(fields: [user_id], references: [id], onDelete: Cascade)
