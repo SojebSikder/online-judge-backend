@@ -193,7 +193,7 @@ model Notification {
   body  String? @db.Text
 
   // action url
-  action String?
+  action_url String?
 
   // 1 = not read, 2 = read
   is_read Int? @default(1)

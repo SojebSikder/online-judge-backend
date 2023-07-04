@@ -19,6 +19,7 @@ import { MailModule } from './providers/mail/mail.module';
 // import { ServeStaticModule } from '@nestjs/serve-static';
 // import { join } from 'path';
 import { TagModule } from './modules/app/tag/tag.module';
+import { ContestModule } from './modules/app/contest/contest.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -48,6 +49,7 @@ import { TagModule } from './modules/app/tag/tag.module';
     ProblemModule,
     SubmissionModule,
     TagModule,
+    ContestModule,
   ],
   controllers: [AppController],
   providers: [

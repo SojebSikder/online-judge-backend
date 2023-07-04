@@ -105,6 +105,22 @@ CREATE TABLE `role_users` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `notifications` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `deleted_at` DATETIME(3) NULL,
+    `status` INTEGER NULL DEFAULT 1,
+    `title` VARCHAR(191) NULL,
+    `body` TEXT NULL,
+    `action_url` VARCHAR(191) NULL,
+    `is_read` INTEGER NULL DEFAULT 1,
+    `user_id` INTEGER NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `teams` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -182,10 +198,15 @@ CREATE TABLE `contests` (
     `approved` BOOLEAN NULL DEFAULT false,
     `name` VARCHAR(191) NULL,
     `slug` VARCHAR(191) NULL,
+    `description` TEXT NULL,
     `start_at` DATETIME(3) NULL,
     `end_at` DATETIME(3) NULL,
+    `contest_type` VARCHAR(191) NULL DEFAULT 'public',
+    `password` VARCHAR(191) NULL,
+    `participant_type` VARCHAR(191) NULL DEFAULT 'individual',
 
     UNIQUE INDEX `contests_slug_key`(`slug`),
+    UNIQUE INDEX `contests_password_key`(`password`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -194,6 +215,7 @@ CREATE TABLE `contest_problems` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `sort_order` VARCHAR(191) NULL DEFAULT 'A',
     `contest_id` INTEGER NULL,
     `problem_id` INTEGER NULL,
     `max_score` INTEGER NULL DEFAULT 0,
@@ -208,6 +230,7 @@ CREATE TABLE `contest_moderators` (
     `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `deleted_at` DATETIME(3) NULL,
     `status` INTEGER NULL DEFAULT 1,
+    `role_type` VARCHAR(191) NULL DEFAULT 'viewer',
     `user_id` INTEGER NULL,
     `contest_id` INTEGER NULL,
 
@@ -258,6 +281,7 @@ CREATE TABLE `problem_moderators` (
     `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `deleted_at` DATETIME(3) NULL,
     `status` INTEGER NULL DEFAULT 1,
+    `role_type` VARCHAR(191) NULL DEFAULT 'viewer',
     `user_id` INTEGER NULL,
     `problem_id` INTEGER NULL,
 
@@ -311,6 +335,9 @@ ALTER TABLE `role_users` ADD CONSTRAINT `role_users_role_id_fkey` FOREIGN KEY (`
 
 -- AddForeignKey
 ALTER TABLE `role_users` ADD CONSTRAINT `role_users_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `notifications` ADD CONSTRAINT `notifications_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `teams` ADD CONSTRAINT `teams_owner_id_fkey` FOREIGN KEY (`owner_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
