@@ -9,7 +9,21 @@ export class ProblemService extends PrismaClient {
   }
 
   async findAll() {
-    const data = await this.prisma.problem.findMany();
+    const data = await this.prisma.problem.findMany({
+      include: {
+        ProblemTag: {
+          select: {
+            id: true,
+            tag: {
+              select: {
+                name: true,
+                slug: true,
+              },
+            },
+          },
+        },
+      },
+    });
     return data;
   }
 
