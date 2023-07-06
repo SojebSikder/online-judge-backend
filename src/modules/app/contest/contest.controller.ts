@@ -1,8 +1,8 @@
 import { Controller, Get, Param, UseGuards, Req } from '@nestjs/common';
 import { ContestService } from './contest.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
-import { AbilitiesGuard } from 'src/providers/ability/abilities.guard';
+import { JwtAuthGuard } from '../../../modules/auth/guards/jwt-auth.guard';
+import { AbilitiesGuard } from '../../../providers/ability/abilities.guard';
 
 @ApiBearerAuth()
 @ApiTags('contest')
