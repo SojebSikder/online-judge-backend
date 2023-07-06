@@ -17,7 +17,7 @@ import { JwtAuthGuard } from '../../../modules/auth/guards/jwt-auth.guard';
 import { AbilitiesGuard } from '../../../providers/ability/abilities.guard';
 
 @ApiBearerAuth()
-@ApiTags('Author problem')
+@ApiTags('author problem')
 @UseGuards(JwtAuthGuard, AbilitiesGuard)
 @Controller('author/problem')
 export class AuthorProblemController {

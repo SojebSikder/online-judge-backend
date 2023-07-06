@@ -6,40 +6,78 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { AuthorContestService } from './author-contest.service';
 import { CreateAuthorContestDto } from './dto/create-author-contest.dto';
 import { UpdateAuthorContestDto } from './dto/update-author-contest.dto';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../../../modules/auth/guards/jwt-auth.guard';
+import { AbilitiesGuard } from '../../../providers/ability/abilities.guard';
 
+@ApiBearerAuth()
+@ApiTags('author contest')
+@UseGuards(JwtAuthGuard, AbilitiesGuard)
 @Controller('author/contest')
 export class AuthorContestController {
   constructor(private readonly authorContestService: AuthorContestService) {}
 
+  @ApiOperation({ summary: 'Create contest' })
   @Post()
-  create(@Body() createAuthorContestDto: CreateAuthorContestDto) {
-    return this.authorContestService.create(createAuthorContestDto);
+  async create(
+    @Req() req,
+    @Body() createAuthorContestDto: CreateAuthorContestDto,
+  ) {
+    const userId = req.user.userId;
+    const result = await this.authorContestService.create(
+      userId,
+      createAuthorContestDto,
+    );
+
+    return result;
   }
 
+  @ApiOperation({ summary: 'Read contests' })
   @Get()
-  findAll() {
-    return this.authorContestService.findAll();
+  async findAll(@Req() req) {
+    const userId = req.user.userId;
+    const result = await this.authorContestService.findAll(userId);
+
+    return result;
   }
 
+  @ApiOperation({ summary: 'Show contest' })
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authorContestService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const result = await this.authorContestService.findOne(+id);
+
+    return result;
   }
 
+  @ApiOperation({ summary: 'Update contest' })
   @Patch(':id')
-  update(
+  async update(
+    @Req() req,
     @Param('id') id: string,
     @Body() updateAuthorContestDto: UpdateAuthorContestDto,
   ) {
-    return this.authorContestService.update(+id, updateAuthorContestDto);
+    const userId = req.user.userId;
+    const result = await this.authorContestService.update(
+      userId,
+      +id,
+      updateAuthorContestDto,
+    );
+
+    return result;
   }
 
+  @ApiOperation({ summary: 'Delete contest' })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authorContestService.remove(+id);
+  async remove(@Req() req, @Param('id') id: string) {
+    const userId = req.user.userId;
+    const result = await this.authorContestService.remove(userId, +id);
+
+    return result;
   }
 }

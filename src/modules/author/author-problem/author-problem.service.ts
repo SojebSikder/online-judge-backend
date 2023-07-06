@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 import { CreateAuthorProblemDto } from './dto/create-author-problem.dto';
 import { UpdateAuthorProblemDto } from './dto/update-author-problem.dto';
-import { PrismaClient } from '@prisma/client';
-import { PrismaService } from 'src/providers/prisma/prisma.service';
-import { StringHelper } from 'src/common/helper/string.helper';
+import { PrismaService } from '../../../providers/prisma/prisma.service';
+import { StringHelper } from '../../../common/helper/string.helper';
 
 function getSampleTestCases(
   sample_test_cases_input: string,
