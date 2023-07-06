@@ -40,19 +40,39 @@ export class AuthorContestController {
   }
 
   @ApiOperation({ summary: 'Add problem to the contest' })
-  @Post(':id/problem')
+  @Post(':contest_id/problem')
   async addProblem(
     @Req() req,
-    @Param('id') id: number,
+    @Param('contest_id') contest_id: number,
     @Body() addAuthorContestProblemDto: AddAuthorContestProblemDto,
   ) {
     const userId = req.user.userId;
-    const contestId = +id;
+    const contestId = +contest_id;
 
     const result = await this.authorContestService.addProblem({
       userId,
       contestId,
       addAuthorContestProblemDto,
+    });
+
+    return result;
+  }
+
+  @ApiOperation({ summary: 'Delete problem from the contest' })
+  @Delete(':contest_id/problem/:id')
+  async removeProblem(
+    @Req() req,
+    @Param('contest_id') contest_id: number,
+    @Param('id') id: number,
+  ) {
+    const userId = req.user.userId;
+    const contestId = +contest_id;
+    const contestProblemId = +id;
+
+    const result = await this.authorContestService.removeProblem({
+      userId,
+      contestId,
+      id: contestProblemId,
     });
 
     return result;

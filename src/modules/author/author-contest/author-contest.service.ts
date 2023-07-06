@@ -166,6 +166,66 @@ export class AuthorContestService extends PrismaClient {
     }
   }
 
+  async removeProblem({
+    userId,
+    contestId,
+    id,
+  }: {
+    userId: number;
+    contestId: number;
+    id: number;
+  }) {
+    try {
+      const contest = await this.prisma.contest.findFirst({
+        where: {
+          AND: [
+            {
+              id: contestId,
+            },
+            {
+              author_id: userId,
+            },
+          ],
+        },
+      });
+
+      if (!contest) {
+        return {
+          success: false,
+          message: 'Contest not found',
+        };
+      }
+
+      const result = await this.prisma.contestProblem.deleteMany({
+        where: {
+          AND: [
+            {
+              id: id,
+            },
+            {
+              contest_id: contestId,
+            },
+          ],
+        },
+      });
+
+      if (result) {
+        return {
+          success: true,
+          message: 'Problem deleted successfully',
+        };
+      } else {
+        return {
+          success: false,
+          message: 'Problem deleting failed',
+        };
+      }
+    } catch (error) {
+      // return false;
+      throw error;
+    }
+  }
+
   async findAll(userId: number) {
     const data = await this.prisma.contest.findMany({
       where: {
