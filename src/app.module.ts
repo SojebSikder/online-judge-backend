@@ -20,6 +20,9 @@ import { MailModule } from './providers/mail/mail.module';
 // import { join } from 'path';
 import { TagModule } from './modules/app/tag/tag.module';
 import { ContestModule } from './modules/app/contest/contest.module';
+import { AuthorModule } from './modules/author/author/author.module';
+import { AuthorProblemModule } from './modules/author/author-problem/author-problem.module';
+import { AuthorContestModule } from './modules/author/author-contest/author-contest.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -50,6 +53,9 @@ import { ContestModule } from './modules/app/contest/contest.module';
     SubmissionModule,
     TagModule,
     ContestModule,
+    AuthorModule,
+    AuthorProblemModule,
+    AuthorContestModule,
   ],
   controllers: [AppController],
   providers: [
