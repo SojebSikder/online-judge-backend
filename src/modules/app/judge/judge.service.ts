@@ -25,7 +25,7 @@ export class JudgeService extends PrismaClient {
 
     return response;
   }
-  async create(userId, createJudgeDto: CreateJudgeDto) {
+  async create(userId: number, createJudgeDto: CreateJudgeDto) {
     const response = await this._processJudge({
       userId,
       createJudgeDto,
@@ -151,8 +151,8 @@ export class JudgeService extends PrismaClient {
             result: finalResult,
             problemId: problem_id,
             userId: userId,
-            time: totalTime,
-            memory: totalMemory,
+            time: Number.isNaN(totalTime) ? 0 : totalTime,
+            memory: Number.isNaN(totalMemory) ? 0 : totalMemory,
           });
         }
 
