@@ -19,7 +19,7 @@ import { AbilitiesGuard } from '../../../providers/ability/abilities.guard';
 @ApiBearerAuth()
 @ApiTags('author')
 @UseGuards(JwtAuthGuard, AbilitiesGuard)
-@Controller('author')
+@Controller('author/profile')
 export class AuthorController {
   constructor(private readonly authorService: AuthorService) {}
 
