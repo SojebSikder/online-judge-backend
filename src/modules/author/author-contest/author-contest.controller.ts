@@ -15,6 +15,7 @@ import { UpdateAuthorContestDto } from './dto/update-author-contest.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../../modules/auth/guards/jwt-auth.guard';
 import { AbilitiesGuard } from '../../../providers/ability/abilities.guard';
+import { AddAuthorContestProblemDto } from './dto/add-author-contest-problem.dto';
 
 @ApiBearerAuth()
 @ApiTags('author contest')
@@ -34,6 +35,25 @@ export class AuthorContestController {
       userId,
       createAuthorContestDto,
     );
+
+    return result;
+  }
+
+  @ApiOperation({ summary: 'Add problem to the contest' })
+  @Post(':id/problem')
+  async addProblem(
+    @Req() req,
+    @Param('id') id: number,
+    @Body() addAuthorContestProblemDto: AddAuthorContestProblemDto,
+  ) {
+    const userId = req.user.userId;
+    const contestId = +id;
+
+    const result = await this.authorContestService.addProblem({
+      userId,
+      contestId,
+      addAuthorContestProblemDto,
+    });
 
     return result;
   }
