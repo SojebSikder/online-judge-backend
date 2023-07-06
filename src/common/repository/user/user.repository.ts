@@ -74,7 +74,17 @@ export class UserRepository {
    * @param param0
    * @returns
    */
-  static async createUser({ username, email, password }) {
+  static async createUser({
+    username,
+    email,
+    password,
+    isAdmin = 0,
+  }: {
+    username: string;
+    email: string;
+    password: string;
+    isAdmin?: number;
+  }) {
     try {
       password = await bcrypt.hash(password, appConfig().security.salt);
       const user = await prisma.user.create({
@@ -82,6 +92,7 @@ export class UserRepository {
           username: username,
           email: email,
           password: password,
+          is_admin: isAdmin,
         },
       });
       if (user) {

@@ -118,8 +118,8 @@ INSERT INTO `tags` (`id`, `created_at`, `updated_at`, `deleted_at`, `status`, `n
 --
 
 INSERT INTO `users` (`id`, `created_at`, `updated_at`, `deleted_at`, `status`, `availability`, `score`, `email`, `username`, `fname`, `lname`, `password`, `avatar`, `is_admin`) VALUES
-(1, '2023-07-01 11:49:11.003', '2023-07-01 11:49:11.003', NULL, 1, NULL, 0, 'admin@example.com', 'admin', NULL, NULL, '$2b$10$tAMkwACPoH6Y3mwSC3OIEeAT3wIvzqc/P2ZtSS8ShtkVsMc8r6nYe', NULL, 0),
-(2, '2023-07-01 11:49:11.152', '2023-07-01 11:49:11.152', NULL, 1, NULL, 0, 'sojebsikder@gmail.com', 'sojebsikder', 'Sojeb', 'Sikder', '$2b$10$Sxzh270a.aN8nltcX0/7JOreHmkHa65e2QImR2wuvbVUrbTuq3Z3K', '9f105e455e109e8fd3eed522fd5f277f8logo.jpg', 0);
+(1, '2023-07-01 11:49:11.003', '2023-07-01 11:49:11.003', NULL, 1, NULL, 0, 'admin@example.com', 'admin', NULL, NULL, '$2b$10$tAMkwACPoH6Y3mwSC3OIEeAT3wIvzqc/P2ZtSS8ShtkVsMc8r6nYe', NULL, 1),
+(2, '2023-07-01 11:49:11.152', '2023-07-01 11:49:11.152', NULL, 1, NULL, 0, 'sojebsikder@gmail.com', 'sojebsikder', 'Sojeb', 'Sikder', '$2b$10$Sxzh270a.aN8nltcX0/7JOreHmkHa65e2QImR2wuvbVUrbTuq3Z3K', '9f105e455e109e8fd3eed522fd5f277f8logo.jpg', 1);
 SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
 

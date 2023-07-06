@@ -47,6 +47,7 @@ model User {
   TeamMember          TeamMember[]
   Bookmark            Bookmark[]
   Notification        Notification[]
+  Contest             Contest[]
 
   @@map("users")
 }
@@ -302,6 +303,9 @@ model Contest {
   status     Int?      @default(1)
 
   approved Boolean? @default(false)
+
+  author_id Int?
+  author    User? @relation(fields: [author_id], references: [id], onDelete: SetNull)
 
   name        String?
   slug        String? @unique

@@ -196,6 +196,7 @@ CREATE TABLE `contests` (
     `deleted_at` DATETIME(3) NULL,
     `status` INTEGER NULL DEFAULT 1,
     `approved` BOOLEAN NULL DEFAULT false,
+    `author_id` INTEGER NULL,
     `name` VARCHAR(191) NULL,
     `slug` VARCHAR(191) NULL,
     `description` TEXT NULL,
@@ -359,6 +360,9 @@ ALTER TABLE `problem_tags` ADD CONSTRAINT `problem_tags_problem_id_fkey` FOREIGN
 
 -- AddForeignKey
 ALTER TABLE `problem_tags` ADD CONSTRAINT `problem_tags_tag_id_fkey` FOREIGN KEY (`tag_id`) REFERENCES `tags`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `contests` ADD CONSTRAINT `contests_author_id_fkey` FOREIGN KEY (`author_id`) REFERENCES `users`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `contest_problems` ADD CONSTRAINT `contest_problems_contest_id_fkey` FOREIGN KEY (`contest_id`) REFERENCES `contests`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
