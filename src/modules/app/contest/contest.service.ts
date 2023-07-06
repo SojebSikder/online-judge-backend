@@ -81,12 +81,68 @@ export class ContestService extends PrismaClient {
     }
   }
 
-  findAll() {
-    return `This action returns all contest`;
+  async findAll(userId: number, me: number) {
+    if (me) {
+      const data = await this.prisma.contest.findMany({
+        where: {
+          author_id: userId,
+        },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          description: true,
+          start_at: true,
+          end_at: true,
+          contest_type: true,
+          participant_type: true,
+          author_id: true,
+          created_at: true,
+          updated_at: true,
+        },
+      });
+      return { success: true, data: data };
+    } else {
+      const data = await this.prisma.contest.findMany({
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          description: true,
+          start_at: true,
+          end_at: true,
+          contest_type: true,
+          participant_type: true,
+          author_id: true,
+          created_at: true,
+          updated_at: true,
+        },
+      });
+      return { success: true, data: data };
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} contest`;
+  async findOne(id: number) {
+    const data = await this.prisma.contest.findFirst({
+      where: {
+        id: id,
+      },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        start_at: true,
+        end_at: true,
+        contest_type: true,
+        participant_type: true,
+        author_id: true,
+        created_at: true,
+        updated_at: true,
+      },
+    });
+
+    return { success: true, data: data };
   }
 
   async update(userId: number, id: number, updateContestDto: UpdateContestDto) {

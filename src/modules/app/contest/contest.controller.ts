@@ -32,16 +32,26 @@ export class ContestController {
     return result;
   }
 
+  @ApiOperation({ summary: 'Read contests' })
   @Get()
-  findAll() {
-    return this.contestService.findAll();
+  async findAll(@Req() req) {
+    const userId = req.user.userId;
+    const me = req.query.me;
+
+    const result = await this.contestService.findAll(userId, me);
+
+    return result;
   }
 
+  @ApiOperation({ summary: 'Show contest' })
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.contestService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const result = await this.contestService.findOne(+id);
+
+    return result;
   }
 
+  @ApiOperation({ summary: 'Update contest' })
   @Patch(':id')
   update(
     @Req() req,
@@ -54,6 +64,7 @@ export class ContestController {
     return result;
   }
 
+  @ApiOperation({ summary: 'Delete contest' })
   @Delete(':id')
   remove(@Req() req, @Param('id') id: string) {
     const userId = req.user.userId;
