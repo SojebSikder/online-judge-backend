@@ -313,10 +313,10 @@ export class AuthorContestService extends PrismaClient {
         data['description'] = description;
       }
       if (start_at) {
-        data['start_at'] = start_at;
+        data['start_at'] = new Date(start_at);
       }
       if (end_at) {
-        data['end_at'] = end_at;
+        data['end_at'] = new Date(end_at);
       }
       if (contest_visibility) {
         data['contest_visibility'] = contest_visibility;
