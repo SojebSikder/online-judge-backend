@@ -42,16 +42,22 @@ export class AuthorContestService extends PrismaClient {
       }
 
       if (start_at) {
-        data['start_at'] = start_at;
+        data['start_at'] = new Date(start_at);
       }
       if (end_at) {
-        data['end_at'] = end_at;
+        data['end_at'] = new Date(end_at);
       }
       if (participant_type) {
         data['participant_type'] = participant_type;
       }
 
       const result = await this.prisma.contest.create({
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          author_id: true,
+        },
         data: {
           ...data,
           author_id: userId,
@@ -61,6 +67,7 @@ export class AuthorContestService extends PrismaClient {
       if (result) {
         return {
           success: true,
+          data: result,
           message: 'Contest created successfully',
         };
       } else {
