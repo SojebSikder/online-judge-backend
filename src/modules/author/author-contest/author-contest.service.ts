@@ -285,6 +285,7 @@ export class AuthorContestService extends PrismaClient {
       const name = updateAuthorContestDto.name;
       let slug = updateAuthorContestDto.slug;
       const description = updateAuthorContestDto.description;
+      const password = updateAuthorContestDto.password;
       const start_at = updateAuthorContestDto.start_at;
       const end_at = updateAuthorContestDto.end_at;
       const contest_visibility = updateAuthorContestDto.contest_visibility;
@@ -323,6 +324,11 @@ export class AuthorContestService extends PrismaClient {
       }
       if (participant_type) {
         data['participant_type'] = participant_type;
+      }
+      if (password) {
+        data['password'] = password;
+      } else {
+        data['password'] = null;
       }
 
       const result = await this.prisma.contest.updateMany({
