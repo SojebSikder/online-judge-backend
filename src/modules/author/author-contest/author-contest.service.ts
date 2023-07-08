@@ -241,7 +241,7 @@ export class AuthorContestService extends PrismaClient {
         description: true,
         start_at: true,
         end_at: true,
-        contest_type: true,
+        contest_visibility: true,
         participant_type: true,
         author_id: true,
         created_at: true,
@@ -263,7 +263,7 @@ export class AuthorContestService extends PrismaClient {
         description: true,
         start_at: true,
         end_at: true,
-        contest_type: true,
+        contest_visibility: true,
         participant_type: true,
         author_id: true,
         created_at: true,
@@ -287,7 +287,7 @@ export class AuthorContestService extends PrismaClient {
       const description = updateAuthorContestDto.description;
       const start_at = updateAuthorContestDto.start_at;
       const end_at = updateAuthorContestDto.end_at;
-      const contest_type = updateAuthorContestDto.contest_type;
+      const contest_visibility = updateAuthorContestDto.contest_visibility;
       const participant_type = updateAuthorContestDto.participant_type;
 
       if (name) {
@@ -318,8 +318,8 @@ export class AuthorContestService extends PrismaClient {
       if (end_at) {
         data['end_at'] = end_at;
       }
-      if (contest_type) {
-        data['contest_type'] = contest_type;
+      if (contest_visibility) {
+        data['contest_visibility'] = contest_visibility;
       }
       if (participant_type) {
         data['participant_type'] = participant_type;

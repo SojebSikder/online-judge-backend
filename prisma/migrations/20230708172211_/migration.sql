@@ -202,7 +202,7 @@ CREATE TABLE `contests` (
     `description` TEXT NULL,
     `start_at` DATETIME(3) NULL,
     `end_at` DATETIME(3) NULL,
-    `contest_type` VARCHAR(191) NULL DEFAULT 'public',
+    `contest_visibility` VARCHAR(191) NULL DEFAULT 'public',
     `password` VARCHAR(191) NULL,
     `participant_type` VARCHAR(191) NULL DEFAULT 'individual',
 

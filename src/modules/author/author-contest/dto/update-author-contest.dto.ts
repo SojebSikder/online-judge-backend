@@ -8,7 +8,7 @@ export class UpdateAuthorContestDto extends PartialType(
   description?: string;
 
   @ApiProperty()
-  contest_type?: string;
+  contest_visibility?: string;
 
   @ApiProperty()
   password?: string;

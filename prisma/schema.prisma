@@ -314,9 +314,13 @@ model Contest {
   start_at DateTime?
   end_at   DateTime?
 
-  // contest type
+  // // contest type
+  // // values: icpc, ioi
+  // contest_type String? @default("icpc")
+
+  // contest visibility
   // values: public, private
-  contest_type String? @default("public")
+  contest_visibility String? @default("public")
 
   // contest participation password.
   password String? @unique
