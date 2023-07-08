@@ -8,19 +8,10 @@ export class CreateAuthorContestDto {
   slug: string;
 
   @ApiProperty()
-  description?: string;
-
-  @ApiProperty()
   start_at?: string;
 
   @ApiProperty()
   end_at?: string;
-
-  @ApiProperty()
-  contest_type?: string;
-
-  @ApiProperty()
-  password?: string;
 
   @ApiProperty()
   participant_type?: string;

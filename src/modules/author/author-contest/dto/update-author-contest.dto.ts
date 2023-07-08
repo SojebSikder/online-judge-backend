@@ -5,5 +5,11 @@ export class UpdateAuthorContestDto extends PartialType(
   CreateAuthorContestDto,
 ) {
   @ApiProperty()
-  password: string;
+  description?: string;
+
+  @ApiProperty()
+  contest_type?: string;
+
+  @ApiProperty()
+  password?: string;
 }

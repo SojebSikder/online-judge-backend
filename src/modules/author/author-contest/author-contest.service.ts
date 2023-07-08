@@ -20,7 +20,6 @@ export class AuthorContestService extends PrismaClient {
       let slug = createAuthorContestDto.slug;
       const start_at = createAuthorContestDto.start_at;
       const end_at = createAuthorContestDto.end_at;
-      const contest_type = createAuthorContestDto.contest_type;
       const participant_type = createAuthorContestDto.participant_type;
 
       if (name) {
@@ -47,9 +46,6 @@ export class AuthorContestService extends PrismaClient {
       }
       if (end_at) {
         data['end_at'] = end_at;
-      }
-      if (contest_type) {
-        data['contest_type'] = contest_type;
       }
       if (participant_type) {
         data['participant_type'] = participant_type;
