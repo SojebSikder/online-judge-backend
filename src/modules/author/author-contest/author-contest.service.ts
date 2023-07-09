@@ -265,6 +265,7 @@ export class AuthorContestService extends PrismaClient {
         end_at: true,
         contest_visibility: true,
         participant_type: true,
+        password: true,
         author_id: true,
         created_at: true,
         updated_at: true,
