@@ -178,6 +178,39 @@ export class AuthorProblemService extends PrismaClient {
     return { success: true, data: data };
   }
 
+  async search(query: string) {
+    const data = await this.prisma.problem.findMany({
+      where: {
+        OR: [
+          {
+            name: {
+              contains: query,
+            },
+          },
+          {
+            slug: {
+              contains: query,
+            },
+          },
+        ],
+      },
+      include: {
+        ProblemTag: {
+          select: {
+            id: true,
+            tag: {
+              select: {
+                name: true,
+                slug: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    return { success: true, data: data };
+  }
+
   async findOne(id: number) {
     const data = await this.prisma.problem.findFirst({
       where: {

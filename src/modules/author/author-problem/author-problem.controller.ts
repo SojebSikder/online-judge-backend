@@ -48,6 +48,16 @@ export class AuthorProblemController {
     return result;
   }
 
+  @ApiOperation({ summary: 'Search problems' })
+  @Get('search')
+  async search(@Req() req) {
+    const userId = req.user.userId;
+    const query = req.user.q;
+    const result = await this.authorProblemService.search(query);
+
+    return result;
+  }
+
   @ApiOperation({ summary: 'Show problem' })
   @Get(':id')
   async findOne(@Param('id') id: string) {
