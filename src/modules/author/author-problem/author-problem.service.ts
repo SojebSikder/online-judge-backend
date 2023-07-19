@@ -181,31 +181,14 @@ export class AuthorProblemService extends PrismaClient {
   async search(query: string) {
     const data = await this.prisma.problem.findMany({
       where: {
-        OR: [
-          {
-            name: {
-              contains: query,
-            },
-          },
-          {
-            slug: {
-              contains: query,
-            },
-          },
-        ],
-      },
-      include: {
-        ProblemTag: {
-          select: {
-            id: true,
-            tag: {
-              select: {
-                name: true,
-                slug: true,
-              },
-            },
-          },
+        name: {
+          contains: query,
         },
+      },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
       },
     });
     return { success: true, data: data };
