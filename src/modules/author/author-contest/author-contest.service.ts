@@ -82,6 +82,73 @@ export class AuthorContestService extends PrismaClient {
     }
   }
 
+  async readProblem({
+    userId,
+    contestId,
+  }: {
+    userId: number;
+    contestId: number;
+  }) {
+    try {
+      const contest = await this.prisma.contest.findFirst({
+        where: {
+          AND: [
+            {
+              id: contestId,
+            },
+            {
+              author_id: userId,
+            },
+          ],
+        },
+      });
+
+      if (!contest) {
+        return {
+          success: false,
+          message: 'Contest not found',
+        };
+      }
+
+      const result = await this.prisma.contestProblem.findMany({
+        where: {
+          contest_id: contestId,
+        },
+        select: {
+          id: true,
+          contest_id: true,
+          contest: {
+            select: {
+              id: true,
+            },
+          },
+          problem: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+            },
+          },
+        },
+      });
+
+      if (result) {
+        return {
+          success: true,
+          data: result,
+        };
+      } else {
+        return {
+          success: false,
+          message: 'Problem adding failed',
+        };
+      }
+    } catch (error) {
+      // return false;
+      throw error;
+    }
+  }
+
   async addProblem({
     userId,
     contestId,
@@ -94,7 +161,7 @@ export class AuthorContestService extends PrismaClient {
     try {
       const problem_id = addAuthorContestProblemDto.problem_id;
       const sort_order = addAuthorContestProblemDto.sort_order;
-      const max_score = addAuthorContestProblemDto.max_score;
+      const max_score = Number(addAuthorContestProblemDto.max_score);
 
       const data = {};
       if (sort_order) {

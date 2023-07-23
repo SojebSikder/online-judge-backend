@@ -39,6 +39,20 @@ export class AuthorContestController {
     return result;
   }
 
+  @ApiOperation({ summary: 'Read problem from the contest' })
+  @Get(':contest_id/problem')
+  async ReadProblem(@Req() req, @Param('contest_id') contest_id: number) {
+    const userId = req.user.userId;
+    const contestId = +contest_id;
+
+    const result = await this.authorContestService.readProblem({
+      userId,
+      contestId,
+    });
+
+    return result;
+  }
+
   @ApiOperation({ summary: 'Add problem to the contest' })
   @Post(':contest_id/problem')
   async addProblem(
