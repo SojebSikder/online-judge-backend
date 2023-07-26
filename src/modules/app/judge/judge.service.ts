@@ -8,6 +8,8 @@ import appConfig from '../../../config/app.config';
 import { SubmissionRepository } from '../../../common/repository/submission/submission.repository';
 import { PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../../providers/prisma/prisma.service';
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
 
 function random(size) {
   //returns a crypto-safe random
@@ -16,23 +18,34 @@ function random(size) {
 
 @Injectable()
 export class JudgeService extends PrismaClient {
-  constructor(private prisma: PrismaService) {
+  constructor(
+    private prisma: PrismaService,
+    @InjectQueue('mail-queue') private queue: Queue,
+  ) {
     super();
   }
 
   async run(createJudgeDto: CreateJudgeDto) {
-    const response = await this._processJudge({ createJudgeDto });
-
-    return response;
+    // const response = await this._processJudge({ createJudgeDto });
+    // return response;
+    const job = await this.queue.add('code-execution', {
+      createJudgeDto,
+    });
   }
   async create(userId: number, createJudgeDto: CreateJudgeDto) {
-    const response = await this._processJudge({
+    // const response = await this._processJudge({
+    //   userId,
+    //   createJudgeDto,
+    //   operation: 'submitcode',
+    // });
+
+    // return response;
+
+    const job = await this.queue.add('code-execution', {
       userId,
       createJudgeDto,
       operation: 'submitcode',
     });
-
-    return response;
   }
 
   async _processJudge({
