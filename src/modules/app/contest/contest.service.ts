@@ -37,6 +37,22 @@ export class ContestService extends PrismaClient {
         name: true,
         slug: true,
         description: true,
+        ContestProblem: {
+          orderBy: {
+            sort_order: 'asc',
+          },
+          select: {
+            max_score: true,
+            sort_order: true,
+            problem: {
+              select: {
+                id: true,
+                name: true,
+                slug: true,
+              },
+            },
+          },
+        },
         start_at: true,
         end_at: true,
         contest_visibility: true,

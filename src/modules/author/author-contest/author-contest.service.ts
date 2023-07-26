@@ -114,6 +114,9 @@ export class AuthorContestService extends PrismaClient {
         where: {
           contest_id: contestId,
         },
+        orderBy: {
+          sort_order: 'asc',
+        },
         select: {
           id: true,
           contest_id: true,
@@ -122,6 +125,7 @@ export class AuthorContestService extends PrismaClient {
               id: true,
             },
           },
+          sort_order: true,
           problem: {
             select: {
               id: true,
