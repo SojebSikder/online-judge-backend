@@ -20,7 +20,7 @@ function random(size) {
 export class JudgeService extends PrismaClient {
   constructor(
     private prisma: PrismaService,
-    @InjectQueue('mail-queue') private queue: Queue,
+    @InjectQueue('judge-queue') private queue: Queue,
   ) {
     super();
   }
