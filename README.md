@@ -11,7 +11,7 @@ pnpm install
 Go to docker directory, run following command:
 
 ```bash
-docker build -t 'online-judge' .
+docker build -t 'sojeboj' .
 ```
 
 ## Running the app
