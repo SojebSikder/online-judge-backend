@@ -23,12 +23,10 @@ export class JudgeProcessor {
     });
 
     const userId = job.data.userId;
-    const data = {
-      response: response,
-    };
+    const data = response;
     // fire event to client
-    this.socketGateway.server.to(userId.toString()).emit('message', {
-      from: userId.toString(),
+    this.socketGateway.server.to(userId).emit('message', {
+      from: userId,
       data: data,
     });
   }

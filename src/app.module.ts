@@ -23,6 +23,7 @@ import { ContestModule } from './modules/app/contest/contest.module';
 import { AuthorModule } from './modules/author/author/author.module';
 import { AuthorProblemModule } from './modules/author/author-problem/author-problem.module';
 import { AuthorContestModule } from './modules/author/author-contest/author-contest.module';
+import { SocketModule } from './providers/socket/socket.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -47,6 +48,8 @@ import { AuthorContestModule } from './modules/author/author-contest/author-cont
     AuthModule,
     AbilityModule,
     MailModule,
+    SocketModule,
+    //
     UserModule,
     JudgeModule,
     ProblemModule,
