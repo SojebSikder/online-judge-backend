@@ -25,8 +25,9 @@ export class JudgeController {
 
   @ApiOperation({ summary: 'Code run' })
   @Post('run')
-  async run(@Body() createJudgeDto: CreateJudgeDto) {
-    const result = await this.judgeService.run(createJudgeDto);
+  async run(@Req() req, @Body() createJudgeDto: CreateJudgeDto) {
+    const userId = req.user.userId;
+    const result = await this.judgeService.run(userId, createJudgeDto);
     return result;
   }
 

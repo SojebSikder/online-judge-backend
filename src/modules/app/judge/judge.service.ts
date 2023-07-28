@@ -25,10 +25,11 @@ export class JudgeService extends PrismaClient {
     super();
   }
 
-  async run(createJudgeDto: CreateJudgeDto) {
+  async run(userId: number, createJudgeDto: CreateJudgeDto) {
     // const response = await this._processJudge({ createJudgeDto });
     // return response;
     const job = await this.queue.add('code-execution', {
+      userId,
       createJudgeDto,
     });
   }
