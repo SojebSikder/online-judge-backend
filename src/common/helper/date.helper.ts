@@ -1,4 +1,4 @@
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 /**
  * Date helper
  */
@@ -12,11 +12,13 @@ export class DateHelper {
   static add(value: number, unit: dayjs.ManipulateType) {
     return dayjs().add(30, unit);
   }
-  // format date
-  static format(date) {
-    const d = new Date(date);
-    return d.toISOString();
+
+  // format
+  static format(date: string | number | Date, format = 'MM-DD-YYYY') {
+    const d = dayjs(date).format(format);
+    return d;
   }
+
   static formatDate(date) {
     const d = new Date(date);
     return d.toDateString();

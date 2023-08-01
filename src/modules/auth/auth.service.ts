@@ -13,29 +13,66 @@ export class AuthService extends PrismaClient {
     super();
   }
 
-  async validateUser(email: string, pass: string): Promise<any> {
+  async validateUser(
+    email: string,
+    pass: string,
+    isAdmin: boolean,
+  ): Promise<any> {
     const _password = pass;
-    const user = await this.prisma.user.findFirst({
-      where: {
-        email: email,
-      },
-    });
 
-    if (user) {
-      const _isValidPassword = await bcrypt.compare(_password, user.password);
-      if (_isValidPassword) {
-        const { password, ...result } = user;
-        return result;
+    if (isAdmin) {
+      const user = await this.prisma.user.findFirst({
+        where: {
+          email: email,
+        },
+      });
+
+      if (user) {
+        if (!user.is_admin) {
+          throw new UnauthorizedException('Only admin can access here');
+        } else {
+          const _isValidPassword = await bcrypt.compare(
+            _password,
+            user.password,
+          );
+          if (_isValidPassword) {
+            const { password, ...result } = user;
+            return result;
+          } else {
+            throw new UnauthorizedException('Password not matched');
+          }
+        }
       } else {
-        throw new UnauthorizedException('Password not matched');
+        throw new UnauthorizedException('User not found');
+      }
+    } else {
+      const user = await this.prisma.user.findFirst({
+        where: {
+          email: email,
+        },
+      });
+
+      if (user) {
+        const _isValidPassword = await bcrypt.compare(_password, user.password);
+        if (_isValidPassword) {
+          const { password, ...result } = user;
+          return result;
+        } else {
+          throw new UnauthorizedException('Password not matched');
+        }
+      } else {
+        throw new UnauthorizedException('User not found');
       }
     }
-    return null;
   }
 
   async login({ email, userId }) {
     const payload = { email: email, sub: userId };
     const token = this.jwtService.sign(payload);
+
+    // update last login
+    await UserRepository.updateUserLastLogin({ userId: userId });
+
     return {
       // access_token: token,
       message: 'Logged in successfully',
@@ -46,7 +83,7 @@ export class AuthService extends PrismaClient {
     };
   }
 
-  async register({ fname, lname, username, email, password }) {
+  async register({ username, email, password }) {
     // Check if email and username is exists
     const userEmailExist = await UserRepository.exist({
       field: 'email',
@@ -77,12 +114,11 @@ export class AuthService extends PrismaClient {
       username: username,
       email: email,
       password: password,
-      role_id: 2, // tenant admin
     });
 
     return {
       statusCode: 401,
-      message: 'Account created successfully',
+      message: 'User created successfully',
     };
   }
 }

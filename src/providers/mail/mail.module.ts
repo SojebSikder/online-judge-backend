@@ -1,9 +1,9 @@
-import { MailerModule } from '@nestjs-modules/mailer';
+import { BullModule } from '@nestjs/bull';
 import { Global, Module } from '@nestjs/common';
+import { MailerModule } from '@nestjs-modules/mailer';
 import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 import { MailService } from './mail.service';
-import appConfig from 'src/config/app.config';
-import { BullModule } from '@nestjs/bull';
+import appConfig from '../../config/app.config';
 import { MailProcessor } from './processors/mail.processor';
 
 @Global()

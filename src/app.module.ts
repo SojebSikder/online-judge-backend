@@ -1,14 +1,29 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import { BullModule } from '@nestjs/bull';
+import appConfig from './config/app.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { JudgeModule } from './modules/app/judge/judge.module';
-import { ConfigModule } from '@nestjs/config';
-import appConfig from './config/app.config';
-import { BullModule } from '@nestjs/bull';
 import { RawBodyMiddleware } from './common/middleware/rawBody.middleware';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { APP_GUARD } from '@nestjs/core';
-
+import { AuthModule } from './modules/auth/auth.module';
+import { PrismaModule } from './providers/prisma/prisma.module';
+import { ThrottlerBehindProxyGuard } from './common/guard/throttler-behind-proxy.guard';
+import { ProblemModule } from './modules/app/problem/problem.module';
+import { SubmissionModule } from './modules/app/submission/submission.module';
+import { AbilityModule } from './providers/ability/ability.module';
+import { UserModule } from './modules/app/user/user.module';
+import { MailModule } from './providers/mail/mail.module';
+// import { ServeStaticModule } from '@nestjs/serve-static';
+// import { join } from 'path';
+import { TagModule } from './modules/app/tag/tag.module';
+import { ContestModule } from './modules/app/contest/contest.module';
+import { AuthorModule } from './modules/author/author/author.module';
+import { AuthorProblemModule } from './modules/author/author-problem/author-problem.module';
+import { AuthorContestModule } from './modules/author/author-contest/author-contest.module';
+import { SocketModule } from './providers/socket/socket.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -26,13 +41,34 @@ import { APP_GUARD } from '@nestjs/core';
       ttl: 60,
       limit: 10,
     }),
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, '..', 'public'),
+    // }),
+    PrismaModule,
+    AuthModule,
+    AbilityModule,
+    MailModule,
+    SocketModule,
+    //
+    UserModule,
     JudgeModule,
+    ProblemModule,
+    SubmissionModule,
+    TagModule,
+    ContestModule,
+    AuthorModule,
+    AuthorProblemModule,
+    AuthorContestModule,
   ],
   controllers: [AppController],
   providers: [
     // {
     //   provide: APP_GUARD,
     //   useClass: ThrottlerGuard,
+    // },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: ThrottlerBehindProxyGuard,
     // },
     AppService,
   ],
@@ -41,6 +77,6 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     // consumer.apply(LoggerMiddleware).forRoutes('*');
     // for the raw body
-    consumer.apply(RawBodyMiddleware).forRoutes('*');
+    // consumer.apply(RawBodyMiddleware).forRoutes('*');
   }
 }

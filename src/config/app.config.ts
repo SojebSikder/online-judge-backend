@@ -43,4 +43,12 @@ export default () => ({
   },
 
   auth: {},
+
+  /**
+   * Storage directory
+   */
+  storageUrl: {
+    rootUrl: '.',
+    avatar: 'public/storage/avatar',
+  },
 });

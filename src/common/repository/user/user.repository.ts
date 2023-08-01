@@ -15,6 +15,21 @@ export class UserRepository {
       where: {
         id: Number(userId),
       },
+      include: {
+        RoleUser: {
+          include: {
+            role: {
+              include: {
+                permission_roles: {
+                  include: {
+                    permission: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
     return user;
   }
@@ -59,7 +74,17 @@ export class UserRepository {
    * @param param0
    * @returns
    */
-  static async createUser({ username, email, password, role_id = null }) {
+  static async createUser({
+    username,
+    email,
+    password,
+    isAdmin = 0,
+  }: {
+    username: string;
+    email: string;
+    password: string;
+    isAdmin?: number;
+  }) {
     try {
       password = await bcrypt.hash(password, appConfig().security.salt);
       const user = await prisma.user.create({
@@ -67,8 +92,30 @@ export class UserRepository {
           username: username,
           email: email,
           password: password,
+          is_admin: isAdmin,
         },
       });
+      if (user) {
+        return user;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async updateUserLastLogin({ userId }) {
+    try {
+      const user = await prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          last_logged_in: DateHelper.now(),
+        },
+      });
+
       if (user) {
         return user;
       } else {

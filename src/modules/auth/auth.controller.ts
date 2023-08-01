@@ -21,23 +21,12 @@ export class AuthController {
   @ApiOperation({ summary: 'Register a user' })
   @Post('register')
   create(@Body() data) {
-    const fname = data.fname;
-    const lname = data.lname;
     const username = data.username;
     const email = data.email;
     const password = data.password;
 
-    if (!fname) {
-      throw new HttpException(
-        'First name not provided',
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
-    if (!lname) {
-      throw new HttpException(
-        'Last name not provided',
-        HttpStatus.UNAUTHORIZED,
-      );
+    if (!username) {
+      throw new HttpException('Username not provided', HttpStatus.UNAUTHORIZED);
     }
     if (!email) {
       throw new HttpException('Email not provided', HttpStatus.UNAUTHORIZED);
@@ -47,8 +36,6 @@ export class AuthController {
     }
 
     return this.authService.register({
-      fname: fname,
-      lname: lname,
       username: username,
       email: email,
       password: password,
