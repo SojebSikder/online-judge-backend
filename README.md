@@ -2,6 +2,8 @@
 
 Online judge backend system
 
+Frontend part: https://github.com/SojebSikder/online-judge-frontend
+
 ## Installation
 
 ```bash
@@ -14,31 +16,36 @@ Go to docker directory, run following command:
 docker build -t 'sojeboj' .
 ```
 
+## Installing
+
+```bash
+pnpm install
+```
+
 ## Running the app
 
 ```bash
 # development
-pnpm run start
+pnpm start
 
 # watch mode
-pnpm run start:dev
+pnpm start:dev
 
 # production mode
-pnpm run start:prod
+pnpm start:prod
 
-# with swc compiler (faster)
-nest start -b swc -w
+# watch mode with swc compiler (faster)
+pnpm start:dev-swc
 ```
 
-## Test
-
-```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
-```
+## Used technology
+- Typescript
+- Nest.js
+- Prisma
+- Mysql
+- Socket.io
+- Bullmq
+- Redis
+- Docker
+- Bash
+- etc
