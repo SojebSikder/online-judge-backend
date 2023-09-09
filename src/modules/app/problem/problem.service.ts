@@ -32,7 +32,20 @@ export class ProblemService extends PrismaClient {
       where: {
         id: id,
       },
-      include: {
+      select: {
+        id: true,
+        author_id: true,
+        name: true,
+        slug: true,
+        time_limit: true,
+        memory_limit: true,
+        statement: true,
+        input_format: true,
+        output_format: true,
+        note: true,
+        difficulty: true,
+        sample_test_cases: true,
+        system_test_cases: false,
         ProblemTag: {
           select: {
             id: true,

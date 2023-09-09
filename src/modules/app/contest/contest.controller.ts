@@ -28,4 +28,15 @@ export class ContestController {
 
     return result;
   }
+
+  @ApiOperation({ summary: 'Show contest problem' })
+  @Get(':id/problem/:problemId')
+  async findProblemOne(
+    @Param('id') id: string,
+    @Param('problemId') problemId: string,
+  ) {
+    const result = await this.contestService.findProblemOne(+id, +problemId);
+
+    return result;
+  }
 }
