@@ -27,8 +27,8 @@ export class AbilityFactory {
       createPrismaAbility,
     );
 
-    if (user && user.RoleUser.length > 0) {
-      for (const permissionRoles of user.RoleUser[0].role.permission_roles) {
+    if (user && user.role_users.length > 0) {
+      for (const permissionRoles of user.role_users[0].role.permission_roles) {
         const action = permissionRoles.permission.action;
         const subject = permissionRoles.permission.subject;
 

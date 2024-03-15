@@ -16,7 +16,7 @@ export class UserRepository {
         id: Number(userId),
       },
       include: {
-        RoleUser: {
+        role_users: {
           include: {
             role: {
               include: {

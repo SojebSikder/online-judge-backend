@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
   // previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
@@ -36,19 +36,19 @@ model User {
 
   is_admin Int? @default(0) // 0 = false, 1 = true
 
-  Ucode               Ucode[]
-  Problem             Problem[]
-  Submission          Submission[]
-  RoleUser            RoleUser[]
-  ContestRegistration ContestRegistration[]
-  ContestModerator    ContestModerator[]
-  ProblemModerator    ProblemModerator[]
-  Profile             Profile[]
-  Team                Team[]
-  TeamMember          TeamMember[]
-  Bookmark            Bookmark[]
-  Notification        Notification[]
-  Contest             Contest[]
+  ucodes                Ucode[]
+  problems              Problem[]
+  submissions           Submission[]
+  role_users            RoleUser[]
+  contest_registrations ContestRegistration[]
+  contest_moderators    ContestModerator[]
+  problem_moderators    ProblemModerator[]
+  profiles              Profile[]
+  teams                 Team[]
+  team_members          TeamMember[]
+  bookmarks             Bookmark[]
+  notifications         Notification[]
+  contests              Contest[]
 
   @@map("users")
 }
@@ -227,7 +227,7 @@ model Team {
   owner    User? @relation(fields: [owner_id], references: [id], onDelete: Cascade)
 
   // team members
-  TeamMember TeamMember[]
+  team_members TeamMember[]
 
   @@map("teams")
 }
@@ -274,9 +274,9 @@ model Tag {
   deleted_at DateTime?
   status     Int?      @default(1)
 
-  name       String?
-  slug       String?
-  ProblemTag ProblemTag[]
+  name         String?
+  slug         String?
+  problem_tags ProblemTag[]
 
   @@map("tags")
 }
@@ -329,9 +329,9 @@ model Contest {
   // values: individual, team, any
   participant_type String? @default("individual")
 
-  ContestProblem      ContestProblem[]
-  ContestRegistration ContestRegistration[]
-  ContestModerator    ContestModerator[]
+  contest_problems      ContestProblem[]
+  contest_registrations ContestRegistration[]
+  contest_moderators    ContestModerator[]
 
   @@map("contests")
 }
@@ -425,11 +425,11 @@ model Problem {
   sample_test_cases Json?
   system_test_cases Json?
 
-  Submission       Submission[]
-  ProblemTag       ProblemTag[]
-  ContestProblem   ContestProblem[]
-  ProblemModerator ProblemModerator[]
-  Bookmark         Bookmark[]
+  submissions        Submission[]
+  problem_tags       ProblemTag[]
+  contest_problems   ContestProblem[]
+  problem_moderators ProblemModerator[]
+  bookmarks          Bookmark[]
 
   @@map("problems")
 }

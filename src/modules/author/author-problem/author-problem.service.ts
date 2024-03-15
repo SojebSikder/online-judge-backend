@@ -162,7 +162,7 @@ export class AuthorProblemService extends PrismaClient {
         author_id: userId,
       },
       include: {
-        ProblemTag: {
+        problem_tags: {
           select: {
             id: true,
             tag: {
@@ -200,7 +200,7 @@ export class AuthorProblemService extends PrismaClient {
         id: id,
       },
       include: {
-        ProblemTag: {
+        problem_tags: {
           select: {
             id: true,
             tag: {

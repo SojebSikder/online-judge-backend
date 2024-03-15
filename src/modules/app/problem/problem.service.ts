@@ -11,7 +11,7 @@ export class ProblemService extends PrismaClient {
   async findAll() {
     const data = await this.prisma.problem.findMany({
       include: {
-        ProblemTag: {
+        problem_tags: {
           select: {
             id: true,
             tag: {
@@ -46,7 +46,7 @@ export class ProblemService extends PrismaClient {
         difficulty: true,
         sample_test_cases: true,
         system_test_cases: false,
-        ProblemTag: {
+        problem_tags: {
           select: {
             id: true,
             tag: {
