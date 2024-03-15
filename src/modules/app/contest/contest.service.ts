@@ -37,7 +37,7 @@ export class ContestService extends PrismaClient {
         name: true,
         slug: true,
         description: true,
-        ContestProblem: {
+        contest_problems: {
           orderBy: {
             sort_order: 'asc',
           },
@@ -75,7 +75,7 @@ export class ContestService extends PrismaClient {
         name: true,
         slug: true,
         description: true,
-        ContestProblem: {
+        contest_problems: {
           orderBy: {
             sort_order: 'asc',
           },
@@ -101,7 +101,7 @@ export class ContestService extends PrismaClient {
                 difficulty: true,
                 sample_test_cases: true,
                 system_test_cases: false,
-                ProblemTag: {
+                problem_tags: {
                   select: {
                     id: true,
                     tag: {
@@ -121,6 +121,12 @@ export class ContestService extends PrismaClient {
         contest_visibility: true,
         participant_type: true,
         author_id: true,
+        author: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
         created_at: true,
         updated_at: true,
       },
