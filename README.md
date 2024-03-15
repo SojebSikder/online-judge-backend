@@ -22,6 +22,14 @@ docker build -t 'sojeboj' .
 pnpm install
 ```
 
+## Config
+Copy .env.example to .env and config according to your needs.
+
+Migrate database:
+```bash
+npx prisma migrate dev
+```
+
 ## Running the app
 
 ```bash
