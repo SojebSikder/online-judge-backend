@@ -11,17 +11,17 @@ function getSampleTestCases(
 ): any[] {
   const sample_test_cases = [];
 
-  if (sample_test_cases_input && sample_test_cases_output) {
-    const split_input = sample_test_cases_input.split('\n');
-    const split_output = sample_test_cases_output.split('\n');
+  // if (sample_test_cases_input && sample_test_cases_output) {
+  const split_input = sample_test_cases_input.split('\n');
+  const split_output = sample_test_cases_output.split('\n');
 
-    for (let i = 0; i < split_input.length; i++) {
-      sample_test_cases.push({
-        input: split_input[i],
-        output: split_output[i],
-      });
-    }
+  for (let i = 0; i < split_input.length; i++) {
+    sample_test_cases.push({
+      input: split_input[i],
+      output: split_output[i],
+    });
   }
+  // }
 
   return sample_test_cases;
 }

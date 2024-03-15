@@ -30,7 +30,7 @@ export class AuthorProblemController {
     @Body() createAuthorProblemDto: CreateAuthorProblemDto,
   ) {
     const userId = req.user.userId;
-    const result = this.authorProblemService.create(
+    const result = await this.authorProblemService.create(
       userId,
       createAuthorProblemDto,
     );
