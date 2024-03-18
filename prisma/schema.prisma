@@ -303,7 +303,7 @@ model Contest {
   deleted_at DateTime?
   status     Int?      @default(1)
 
-  approved Boolean? @default(false)
+  approved Int? @default(0)
 
   author_id Int?
   author    User? @relation(fields: [author_id], references: [id], onDelete: SetNull)
