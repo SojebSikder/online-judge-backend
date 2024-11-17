@@ -195,7 +195,7 @@ CREATE TABLE `contests` (
     `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `deleted_at` DATETIME(3) NULL,
     `status` INTEGER NULL DEFAULT 1,
-    `approved` BOOLEAN NULL DEFAULT false,
+    `approved` INTEGER NULL DEFAULT 0,
     `author_id` INTEGER NULL,
     `name` VARCHAR(191) NULL,
     `slug` VARCHAR(191) NULL,
