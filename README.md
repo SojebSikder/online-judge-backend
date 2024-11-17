@@ -7,7 +7,7 @@ Frontend part: https://github.com/SojebSikder/online-judge-frontend
 ## Installation
 
 ```bash
-pnpm install
+yarn install
 ```
 
 Go to docker directory, run following command:
@@ -19,7 +19,7 @@ docker build -t 'sojeboj' .
 ## Installing
 
 ```bash
-pnpm install
+yarn install
 ```
 
 ## Config
@@ -34,16 +34,16 @@ npx prisma migrate dev
 
 ```bash
 # development
-pnpm start
+yarn start
 
 # watch mode
-pnpm start:dev
+yarn start:dev
 
 # production mode
-pnpm start:prod
+yarn start:prod
 
 # watch mode with swc compiler (faster)
-pnpm start:dev-swc
+yarn start:dev-swc
 ```
 
 ## Used technology
