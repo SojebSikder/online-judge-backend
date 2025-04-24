@@ -104,9 +104,7 @@ export class JudgeService extends PrismaClient {
     };
     const op = operation; //'runcode';
 
-    const codeSandbox = new CodeSandbox({
-      rootPath: appConfig().app.root_path + '/submissions/',
-    });
+    const codeSandbox = new CodeSandbox();
 
     try {
       const result = await codeSandbox.addSubmission({

@@ -1,209 +1,167 @@
 import * as shell from 'shelljs';
-import * as async from 'async';
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 import * as path from 'path';
+import { existsSync } from 'fs';
 
-// const PATH_INIT = path.join(
-//   // 'D:/My Program/project/web/sojeb-oj',
-//   appConfig().app.root_path,
-//   '/submissions/',
-// );
-
-const execute = function (
-  language,
-  problem,
-  filename,
-  testfileName,
-  outputfileName,
-  timeMemoryfileName,
-) {
-  const codefileName = 'solution.' + language;
-  // const commandText = `docker run --rm -v "$(pwd)/solution.cpp:/solution.cpp" -v "$(pwd)/testcase.txt:/testcase.txt" -v "$(pwd)/output.txt:/output.txt" -v "$(pwd)/timeMemory.txt:/timeMemory.txt" sojeboj cpp ./output.txt ./timeMemory.txt 100 100`;
-  const commandText = `docker run --rm -v "${filename}:/${codefileName}" -v "${testfileName}:/testcase.txt" -v "${outputfileName}:/output.txt" -v "${timeMemoryfileName}:/timeMemory.txt" sojeboj ${language} ./output.txt ./timeMemory.txt ${problem.timeLimit} ${problem.memoryLimit}`;
-  // return `docker run --rm -v="${filename}":/${codefileName}/ -v="${testfileName}":/testcase.txt/ -v="${outputfileName}":/output.txt/ -v="${timeMemoryfileName}":/timeMemory.txt/ online-judge ${language} output.txt timeMemory.txt ${problem.time} ${problem.memory}`;
-
-  return commandText;
+const execute = (
+  language: string,
+  problem: any,
+  filename: string,
+  testfileName: string,
+  outputfileName: string,
+  timeMemoryfileName: string,
+): string => {
+  const codefileName = `solution.${language}`;
+  return `docker run --rm -v "${filename}:/${codefileName}" -v "${testfileName}:/testcase.txt" -v "${outputfileName}:/output.txt" -v "${timeMemoryfileName}:/timeMemory.txt" sojeboj ${language} ./output.txt ./timeMemory.txt ${problem.timeLimit} ${problem.memoryLimit}`;
 };
 
-const test = function (rootPath, problem, submission, op): Promise<any[]> {
-  return new Promise((resolve, reject) => {
-    try {
-      // const PATH = path.join(PATH_INIT, submission._id.toString(), '/');
-      const PATH = path.join(rootPath, submission._id.toString(), '/');
-      const code = submission.code;
-      const filename = PATH + 'solution.' + submission.language;
-      const testfileName = PATH + 'testcase.txt';
-      const outputfileName = PATH + 'output.txt';
-      const timeMemoryfileName = PATH + 'timeMemory.txt';
-      let allTestcases = [];
+const runTestCase = async (
+  rootPath: string,
+  problem: any,
+  submission: any,
+  testcase: any,
+  op: string,
+  paths: {
+    filename: string;
+    testfileName: string;
+    outputfileName: string;
+    timeMemoryfileName: string;
+  },
+) => {
+  const { filename, testfileName, outputfileName, timeMemoryfileName } = paths;
 
-      if (op === 'runcode') allTestcases = [...problem.sampleTestcases];
-      else
-        allTestcases = [...problem.sampleTestcases, ...problem.systemTestcases];
+  await fs.writeFile(testfileName, testcase.input);
 
-      const result = [];
-
-      async.waterfall([
-        function (next) {
-          fs.mkdir(PATH.slice(0, -1), (err) => {
-            if (err) next(null, err);
-            else next(null, null);
-          });
-        },
-        function (err, next) {
-          if (err) next(null, err);
-          fs.closeSync(fs.openSync(outputfileName, 'w'));
-          fs.closeSync(fs.openSync(timeMemoryfileName, 'w'));
-          fs.closeSync(fs.openSync(filename, 'w'));
-          fs.closeSync(fs.openSync(testfileName, 'w'));
-          next(null, null);
-        },
-        function (err, next) {
-          if (err) next(null, err);
-          fs.writeFile(filename, code, (err) => {
-            if (err) console.log(err);
-            next(null, null);
-          });
-        },
-        function (err, next) {
-          if (err) next(null, err);
-          async.forEachLimit(
-            allTestcases,
-            1,
-            function (curTestcase, cb) {
-              async.waterfall([
-                function (next) {
-                  if (err) next(null, err);
-                  fs.writeFile(testfileName, curTestcase.input, (err) => {
-                    if (err) console.log(err);
-                    next(null, null);
-                  });
-                },
-                function (err, next) {
-                  if (err) next(null, err);
-                  shell.cd(rootPath);
-                  shell.exec(
-                    execute(
-                      submission.language,
-                      problem,
-                      filename,
-                      testfileName,
-                      outputfileName,
-                      timeMemoryfileName,
-                    ),
-                    function () {
-                      next(null, null);
-                    },
-                  );
-                },
-                function (err, next) {
-                  if (err) next(null, err);
-                  try {
-                    const expectedOutput = curTestcase.output.trim();
-
-                    const actualOutput = fs
-                      .readFileSync(outputfileName)
-                      .toString()
-                      .trim();
-                    const timeMemoryOutput = fs
-                      .readFileSync(timeMemoryfileName)
-                      .toString()
-                      .trim();
-
-                    const arr = timeMemoryOutput.split('\n');
-                    const time = arr.slice(-2)[0],
-                      memory = arr.slice(-1)[0];
-
-                    const curResult = {
-                      actualOutput: actualOutput,
-                      expectedOutput: expectedOutput,
-                      time: parseFloat(time),
-                      memory: parseFloat(memory),
-                      CE: false,
-                      RTE: false,
-                      TLE: false,
-                      MLE: false,
-                      AC: false,
-                      WA: false,
-                    };
-
-                    if (actualOutput.includes('COMPILATION ERROR')) {
-                      curResult.CE = true;
-                      curResult.time = 0;
-                      curResult.memory = 0;
-                    } else if (actualOutput.includes('MLE'))
-                      curResult.MLE = true;
-                    else if (actualOutput.includes('TLE')) curResult.TLE = true;
-                    else if (actualOutput.includes('RUNTIME ERROR'))
-                      curResult.RTE = true;
-                    else if (
-                      op !== 'customInput' &&
-                      actualOutput === expectedOutput
-                    )
-                      curResult.AC = true;
-                    else if (op !== 'customInput') curResult.WA = true;
-
-                    result.push(curResult);
-                    cb();
-                  } catch (err) {
-                    // callback(err, null);
-                    reject(err);
-                  }
-                },
-              ]);
-            },
-            function (err) {
-              if (err) {
-                next(null, err);
-              }
-              next(null, null);
-            },
-          );
-        },
-        function (err) {
-          // if (err) callback(err, null);
-          if (err) reject(err);
-          fs.rm(PATH.slice(0, -1), { recursive: true }, (err) => {
-            // if (err) callback(err, null);
-            // else callback(null, result);
-            if (err) reject(err);
-            else resolve(result);
-          });
-        },
-      ]);
-    } catch (error) {
-      reject(error);
-    }
+  shell.cd(rootPath);
+  await new Promise((resolve) => {
+    shell.exec(
+      execute(
+        submission.language,
+        problem,
+        filename,
+        testfileName,
+        outputfileName,
+        timeMemoryfileName,
+      ),
+      () => resolve(null),
+    );
   });
+
+  const expectedOutput = testcase.output.trim();
+  const actualOutput = (await fs.readFile(outputfileName, 'utf-8')).trim();
+  const timeMemoryOutput = (
+    await fs.readFile(timeMemoryfileName, 'utf-8')
+  ).trim();
+  const [time, memory] = timeMemoryOutput.split('\n').slice(-2);
+
+  const result = {
+    actualOutput,
+    expectedOutput,
+    time: parseFloat(time),
+    memory: parseFloat(memory),
+    CE: false,
+    RTE: false,
+    TLE: false,
+    MLE: false,
+    AC: false,
+    WA: false,
+  };
+
+  if (actualOutput.includes('COMPILATION ERROR')) {
+    result.CE = true;
+    result.time = 0;
+    result.memory = 0;
+  } else if (actualOutput.includes('MLE')) result.MLE = true;
+  else if (actualOutput.includes('TLE')) result.TLE = true;
+  else if (actualOutput.includes('RUNTIME ERROR')) result.RTE = true;
+  else if (op !== 'customInput' && actualOutput === expectedOutput)
+    result.AC = true;
+  else if (op !== 'customInput') result.WA = true;
+
+  return result;
+};
+
+const test = async (
+  problem: any,
+  submission: any,
+  op: string,
+): Promise<any[]> => {
+  const rootPath = process.cwd();
+  const submissionPath = path.join(rootPath, submission._id.toString(), '/');
+  const paths = {
+    filename: path.join(submissionPath, `solution.${submission.language}`),
+    testfileName: path.join(submissionPath, 'testcase.txt'),
+    outputfileName: path.join(submissionPath, 'output.txt'),
+    timeMemoryfileName: path.join(submissionPath, 'timeMemory.txt'),
+  };
+
+  const allTestcases =
+    op === 'runcode'
+      ? [...problem.sampleTestcases]
+      : [...problem.sampleTestcases, ...problem.systemTestcases];
+
+  try {
+    if (!existsSync(submissionPath))
+      await fs.mkdir(submissionPath, { recursive: true });
+
+    await Promise.all([
+      fs.writeFile(paths.filename, submission.code),
+      fs.writeFile(paths.outputfileName, ''),
+      fs.writeFile(paths.timeMemoryfileName, ''),
+      fs.writeFile(paths.testfileName, ''),
+    ]);
+
+    const results = [];
+    for (const testcase of allTestcases) {
+      const result = await runTestCase(
+        rootPath,
+        problem,
+        submission,
+        testcase,
+        op,
+        paths,
+      );
+      results.push(result);
+    }
+
+    await fs.rm(submissionPath, { recursive: true, force: true });
+    return results;
+  } catch (error) {
+    // Clean up on error
+    if (existsSync(submissionPath)) {
+      await fs.rm(submissionPath, { recursive: true, force: true });
+    }
+    throw error;
+  }
 };
 
 async function addSubmission({
-  rootPath,
   problem,
   submission,
   op,
+}: {
+  problem: any;
+  submission: any;
+  op: string;
 }): Promise<any[]> {
-  return await test(rootPath, problem, submission, op);
+  return await test(problem, submission, op);
 }
 
-// option
-type Option = {
-  rootPath?: string;
-};
-
 /**
- * @class CodeSandbox
  * @description CodeSandbox class
- * @param {Object} config
+ * @author [@sojebsikder](https://github.com/sojebsikder)
  */
 export class CodeSandbox {
-  private _config: Option;
-  constructor(config: Option) {
-    this._config = config;
-  }
-  async addSubmission({ problem, submission, op }): Promise<any[]> {
+  async addSubmission({
+    problem,
+    submission,
+    op,
+  }: {
+    problem: any;
+    submission: any;
+    op: string;
+  }): Promise<any[]> {
     return await addSubmission({
-      rootPath: this._config.rootPath,
       problem,
       submission,
       op,

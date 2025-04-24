@@ -55,7 +55,7 @@ yarn start:dev-swc
 - Typescript
 - Nest.js
 - Prisma
-- Mysql
+- Postgres
 - Socket.io
 - Bullmq
 - Redis

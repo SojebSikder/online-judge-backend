@@ -5,7 +5,6 @@ export default () => ({
     url: process.env.APP_URL,
     client_app_url: process.env.CLIENT_APP_URL,
     port: parseInt(process.env.PORT, 10) || 3000,
-    root_path: process.env.ROOT_PATH,
   },
 
   fileSystems: {
